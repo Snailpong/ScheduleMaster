@@ -64,6 +64,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             case 2:
                 holder.img.setImageResource(R.drawable.ic_clear_pink_24dp);
                 break;
+            case 3:
+                holder.img.setImageResource(R.drawable.ic_notifications_active_sky_24dp);
+                break;
         }
         SimpleDateFormat dayTime = new SimpleDateFormat("yy-mm-dd hh:mm");
         holder.time.setText(dayTime.format(new Date(al.getTime())));

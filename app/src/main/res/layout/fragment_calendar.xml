@@ -29,9 +29,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="calendar" />
+        android:orientation="vertical"
+        android:rowCount="109"
+        android:columnCount="6">
+
+    </GridLayout>
+
 
 </LinearLayout>
