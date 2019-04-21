@@ -24,19 +24,36 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="일정">
 
+            <ImageView
+                android:id="@+id/calender_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_add_white_24dp"/>
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- TODO: Update blank fragment layout -->
-    <GridLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:rowCount="109"
-        android:columnCount="6">
+        android:layout_height="match_parent">
+        <com.github.eunsiljo.timetablelib.view.TimeTableView
+            android:id="@+id/timeTable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_today_white_24dp" />
 
-    </GridLayout>
+    </FrameLayout>
+
 
 
 </LinearLayout>
