@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/table_clicked"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".TabbedActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <DatePicker
+            android:id="@+id/dataPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/cancelAddBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/PrimaryFlatButton"
+                android:text="추가"/>
+            <Button
+                android:id="@+id/cancelCancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/PrimaryFlatButton"
+                android:text="취소"/>
+        </LinearLayout>
+</LinearLayout>

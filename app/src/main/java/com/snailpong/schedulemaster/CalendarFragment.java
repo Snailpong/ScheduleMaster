@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
 import com.github.eunsiljo.timetablelib.data.TimeTableData;
@@ -47,6 +48,20 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         timeTable = (TimeTableView) view.findViewById(R.id.timeTable);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
+        Button addBtn = (Button) view.findViewById(R.id.calender_button);
+
+        addBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("key", "value");
+                CalendarAddDialog dialog = new CalendarAddDialog();
+                dialog.setArguments(args); // 데이터 전달
+                dialog.show(getActivity().getSupportFragmentManager(),"tag");
+            }
+        });
+
         initData();
         initListener();
         return view;
