@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="과목 추가">
+            app:title="정기 일정 추가">
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
     <!-- //end 타이틀바 -->
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="수업 입력 :"/>
+                android:text="이름 :"/>
             <EditText
                 android:id="@+id/TextSubject"
                 android:alpha="0.87"
@@ -186,29 +186,27 @@
     <!-- 닫기 버튼 -->
     <LinearLayout
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="right"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <Button
+            android:id="@+id/dia_add_add"
             android:text="확인"
             android:textSize="15sp"
             android:padding="16dp"
             android:gravity="center"
-            android:background="#ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/dia_add_cancel"
             android:gravity="center"
-            android:background="#ffffff"
-            android:onClick="mOnClose"
             android:padding="16dp"
-            android:layout_weight="1"
             android:text="취소"
-            android:textSize="15sp" />
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
     <!--// 닫기 버튼 -->
 </LinearLayout>
