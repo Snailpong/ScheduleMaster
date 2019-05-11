@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddDeadlineActivity"></activity>
+        <activity android:name=".CalendarRegularModifyActivity"></activity>
+        <activity android:name=".AddDeadlineActivity" />
         <activity android:name=".AddNoclassActivity" />
+        <activity android:name=".CalendarRegularAddActivity" />
         <activity
             android:name=".TabbedActivity"
             android:label="@string/title_activity_tabbed"

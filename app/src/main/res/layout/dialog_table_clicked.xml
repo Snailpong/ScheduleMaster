@@ -141,4 +141,37 @@
             android:textSize="17sp"
             android:textColor="#000"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+        <Button
+            android:id="@+id/dia_clicked_modify"
+            android:text="수정"
+            android:textSize="15sp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/dia_clicked_delete"
+            android:text="삭제"
+            android:textSize="15sp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/dia_clicked_yes"
+            android:text="확인"
+            android:textSize="15sp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

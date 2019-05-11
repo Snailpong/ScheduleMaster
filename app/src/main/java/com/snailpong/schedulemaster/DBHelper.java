@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,5 +19,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists weekly");
         onCreate(db);
+    }
+
+    public void addRegular(SQLiteDatabase db, String name, int day, String startTime, String endTime) {
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("day", day);
+        values.put("starttime", startTime);
+        values.put("endtime", endTime);
+        db.insert("weekly", null, values);
     }
 }

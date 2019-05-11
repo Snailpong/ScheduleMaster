@@ -1,20 +1,15 @@
 package com.snailpong.schedulemaster;
 
-import android.content.ContentValues;
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
 import com.github.eunsiljo.timetablelib.data.TimeTableData;
@@ -65,15 +60,20 @@ public class CalendarFragment extends Fragment {
             public void onClick(View v) {
                 Bundle args = new Bundle();
                 args.putString("key", "value");
-                CalendarAddDialog dialog = new CalendarAddDialog();
-                dialog.setArguments(args); // 데이터 전달
-                dialog.show(getActivity().getSupportFragmentManager(),"tag");
+                CalendarRegularAddActivity dialog = new CalendarRegularAddActivity();
+                Intent intent = new Intent(getActivity(), CalendarRegularAddActivity.class);
+                startActivity(intent);
             }
         });
 
+        return view;
+    }
+
+    @Override
+    public void onResume(){
         initData();
         initListener();
-        return view;
+        super.onResume();
     }
 
     private void initListener() {
@@ -102,51 +102,18 @@ public class CalendarFragment extends Fragment {
         db = helper.getWritableDatabase();
         helper.onCreate(db);
 
-/*
-        ContentValues values = new ContentValues();
-        values.put("name", "신호및시스템");
-        values.put("day", 5);
-        values.put("starttime", "10:30");
-        values.put("endtime", "11:45");
-        db.insert("weekly", null, values);
+        /*
+        helper.addRegular(db, "신호및시스템".toString(), 5, "10:30", "11:45");
+        helper.addRegular(db, "운영체제".toString(), 5, "13:30", "14:45");
+        helper.addRegular(db, "컴퓨터구조".toString(), 5, "15:00", "16:15");
+        helper.addRegular(db, "제어공학(I)".toString(), 10, "10:30", "11:45");
+        helper.addRegular(db, "전기기기(I)".toString(), 10, "13:30", "14:45");
+        helper.addRegular(db, "마이크로프로세서응용".toString(), 10, "15:00", "16:15");
+        helper.addRegular(db, "소프트웨어설계및실험".toString(), 2, "18:00", "22:00");
+        helper.addRegular(db, "컴퓨터응용설계및실험".toString(), 4, "18:00", "22:00");
+        helper.addRegular(db, "컴퓨터기초실험".toString(), 8, "18:00", "22:00");
+        */
 
-        values = new ContentValues();
-        values.put("name", "운영체제");
-        values.put("day", 5);
-        values.put("starttime", "13:30");
-        values.put("endtime", "14:45");
-        db.insert("weekly", null, values);
-
-        values = new ContentValues();
-        values.put("name", "컴퓨터구조");
-        values.put("day", 5);
-        values.put("starttime", "15:00");
-        values.put("endtime", "16:15");
-        db.insert("weekly", null, values);
-
-        values = new ContentValues();
-        values.put("name", "제어공학(I)");
-        values.put("day", 10);
-        values.put("starttime", "10:30");
-        values.put("endtime", "11:45");
-        db.insert("weekly", null, values);
-
-        values = new ContentValues();
-        values.put("name", "전기기기(I)");
-        values.put("day", 10);
-        values.put("starttime", "13:30");
-        values.put("endtime", "14:45");
-        db.insert("weekly", null, values);
-
-        values = new ContentValues();
-        values.put("name", "마이크로프로세서응용");
-        values.put("day", 10);
-        values.put("starttime", "15:00");
-        values.put("endtime", "16:15");
-        db.insert("weekly", null, values);
-
-
-*/
         mShortSamples = new ArrayList<>();
         Cursor c = db.query("weekly", null, null, null, null, null, null);
 
@@ -166,7 +133,8 @@ public class CalendarFragment extends Fragment {
             //Log.d("w",starttime);
             //Toast.makeText(getActivity(), String.valueOf(week), Toast.LENGTH_LONG).show();
             for(int i=0; i!=7; ++i) {
-                if(week % 2 == 1) valuelist.get(i).add(new TimeData(id, name, mColors.get(id % 7), getMillis("2017-11-10 "+ starttime +":00"), getMillis("2017-11-10 "+ endtime + ":00")));
+                if(week % 2 == 1) valuelist.get(i).add(new TimeData(id, name, mColors.get(id % 7),
+                        getMillis("2017-11-10 "+ starttime +":00"), getMillis("2017-11-10 "+ endtime + ":00")));
                 week /= 2;
             }
         }
@@ -187,33 +155,8 @@ public class CalendarFragment extends Fragment {
 
         DateTime now = DateTime.now();
         mNow = now.withTimeAtStartOfDay().getMillis();
-        //initShortSamples();
         initLongSamples();
         timeTable.setTimeTable(getMillis("2017-11-10 00:00:00"), mShortSamples);
-    }
-
-    private void initShortSamples() {
-        mShortSamples = new ArrayList<>();
-        ArrayList<TimeData> values = new ArrayList<>();
-        values.add(new TimeData(0, "신호및시스템", R.color.color_table_1_light, getMillis("2017-11-10 10:30:00"), getMillis("2017-11-10 11:45:00")));
-        values.add(new TimeData(1, "운영체제", R.color.color_table_2_light, getMillis("2017-11-10 13:30:00"), getMillis("2017-11-10 14:45:00")));
-        values.add(new TimeData(2, "컴퓨터구조", R.color.color_table_3_light, getMillis("2017-11-10 15:00:00"), getMillis("2017-11-10 16:15:00")));
-
-        ArrayList<TimeData> values2 = new ArrayList<>();
-        values2.add(new TimeData(3, "제어공학(I)", R.color.color_table_4_light, getMillis("2017-11-10 10:30:00"), getMillis("2017-11-10 11:45:00")));
-        values2.add(new TimeData(4, "전기기기(I)", R.color.color_table_5_light, getMillis("2017-11-10 13:30:00"), getMillis("2017-11-10 14:45:00")));
-        values2.add(new TimeData(5, "마이크로프로세서응용", R.color.color_table_6_light, getMillis("2017-11-10 15:00:00"), getMillis("2017-11-10 16:15:00")));
-
-        ArrayList<TimeTableData> tables = new ArrayList<>();
-        tables.add(new TimeTableData("월", values));
-        tables.add(new TimeTableData("화", values2));
-        tables.add(new TimeTableData("수", values));
-        tables.add(new TimeTableData("목", values2));
-        tables.add(new TimeTableData("금", values));
-        //tables.add(new TimeTableData("토", new ArrayList<TimeData>()));
-        //tables.add(new TimeTableData("일", new ArrayList<TimeData>()));
-
-        mShortSamples.addAll(tables);
     }
 
     private void initLongSamples() {
