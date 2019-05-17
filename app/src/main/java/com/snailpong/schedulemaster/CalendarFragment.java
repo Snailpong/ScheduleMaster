@@ -6,14 +6,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
+import com.github.eunsiljo.timetablelib.data.TimeGridData;
 import com.github.eunsiljo.timetablelib.data.TimeTableData;
 import com.github.eunsiljo.timetablelib.view.TimeTableView;
+import com.github.eunsiljo.timetablelib.viewholder.TimeTableItemViewHolder;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -32,8 +35,6 @@ public class CalendarFragment extends Fragment {
     private FloatingActionButton fab;
     private boolean select = false;
 
-    private List<String> mTitles = Arrays.asList("A","B","C","D","E","F","G");
-    private List<String> mLongHeaders = Arrays.asList("Plan", "Do");
     private List<String> mShortHeaders = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
     private List<Integer> mColors = Arrays.asList(R.color.color_table_1_light, R.color.color_table_2_light, R.color.color_table_3_light,
             R.color.color_table_4_light, R.color.color_table_5_light, R.color.color_table_6_light, R.color.color_table_7_light);
@@ -63,6 +64,24 @@ public class CalendarFragment extends Fragment {
                 CalendarRegularAddActivity dialog = new CalendarRegularAddActivity();
                 Intent intent = new Intent(getActivity(), CalendarRegularAddActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        timeTable.setOnTimeItemClickListener(new TimeTableItemViewHolder.OnTimeItemClickListener() {
+            @Override
+            public void onTimeItemClick(View view, int position, TimeGridData item) {
+                TimeData time = item.getTime();
+                int id = (Integer)item.getTime().getKey();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Bundle args = new Bundle();
+                args.putInt("id", id);
+                if(select) {
+
+                } else {
+                    TableClickedDialog dialogFragment = new TableClickedDialog();
+                    dialogFragment.setArguments(args);
+                    dialogFragment.show(fm, String.valueOf(id));
+                }
             }
         });
 
@@ -102,17 +121,17 @@ public class CalendarFragment extends Fragment {
         db = helper.getWritableDatabase();
         helper.onCreate(db);
 
-        /*
-        helper.addRegular(db, "신호및시스템".toString(), 5, "10:30", "11:45");
-        helper.addRegular(db, "운영체제".toString(), 5, "13:30", "14:45");
-        helper.addRegular(db, "컴퓨터구조".toString(), 5, "15:00", "16:15");
-        helper.addRegular(db, "제어공학(I)".toString(), 10, "10:30", "11:45");
-        helper.addRegular(db, "전기기기(I)".toString(), 10, "13:30", "14:45");
-        helper.addRegular(db, "마이크로프로세서응용".toString(), 10, "15:00", "16:15");
-        helper.addRegular(db, "소프트웨어설계및실험".toString(), 2, "18:00", "22:00");
-        helper.addRegular(db, "컴퓨터응용설계및실험".toString(), 4, "18:00", "22:00");
-        helper.addRegular(db, "컴퓨터기초실험".toString(), 8, "18:00", "22:00");
-        */
+/*
+        helper.addRegular(db, "신호및시스템".toString(), 5, "10:30", "11:45", false, false, 0, 0);
+        helper.addRegular(db, "운영체제".toString(), 5, "13:30", "14:45", false, false, 0, 0);
+        helper.addRegular(db, "컴퓨터구조".toString(), 5, "15:00", "16:15", false, false, 0, 0);
+        helper.addRegular(db, "제어공학(I)".toString(), 10, "10:30", "11:45", false, false, 0, 0);
+        helper.addRegular(db, "전기기기(I)".toString(), 10, "13:30", "14:45", false, false, 0, 0);
+        helper.addRegular(db, "마이크로프로세서응용".toString(), 10, "15:00", "16:15", false, false, 0, 0);
+        helper.addRegular(db, "소프트웨어설계및실험".toString(), 2, "18:00", "22:00", false, false, 0, 0);
+        helper.addRegular(db, "컴퓨터응용설계및실험".toString(), 4, "18:00", "22:00", false, false, 0, 0);
+        helper.addRegular(db, "컴퓨터기초실험".toString(), 8, "18:00", "22:00", false, false, 0, 0);
+*/
 
         mShortSamples = new ArrayList<>();
         Cursor c = db.query("weekly", null, null, null, null, null, null);

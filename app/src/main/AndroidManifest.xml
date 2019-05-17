@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CalendarRegularModifyActivity"></activity>
+        <activity android:name=".CalendarInregularModifyActivity"></activity>
+        <activity android:name=".CalendarInregularAddActivity" />
+        <activity android:name=".LoadingActivity" />
+        <activity android:name=".CalendarRegularModifyActivity" />
         <activity android:name=".AddDeadlineActivity" />
         <activity android:name=".AddNoclassActivity" />
         <activity android:name=".CalendarRegularAddActivity" />

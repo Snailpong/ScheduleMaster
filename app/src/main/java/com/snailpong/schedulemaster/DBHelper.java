@@ -12,7 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //db.execSQL("drop table if exists weekly");
-        db.execSQL("create table if not exists weekly(_id integer primary key autoincrement, name text, day integer, starttime text, endtime text);");
+        db.execSQL("create table if not exists weekly(_id integer primary key autoincrement, name text, day integer, starttime text, endtime text, vib integer, gps integer, x real, y real);");
     }
 
     @Override
@@ -21,12 +21,16 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addRegular(SQLiteDatabase db, String name, int day, String startTime, String endTime) {
+    public void addRegular(SQLiteDatabase db, String name, int day, String startTime, String endTime, boolean vib, boolean gps, double y, double x) {
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("day", day);
         values.put("starttime", startTime);
         values.put("endtime", endTime);
+        values.put("vib", vib?1:0);
+        values.put("gps", gps?1:0);
+        values.put("y",y);
+        values.put("x",x);
         db.insert("weekly", null, values);
     }
 }

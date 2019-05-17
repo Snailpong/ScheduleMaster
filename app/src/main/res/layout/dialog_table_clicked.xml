@@ -166,7 +166,7 @@
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/dia_clicked_yes"
-            android:text="확인"
+            android:text="닫기"
             android:textSize="15sp"
             android:padding="16dp"
             android:gravity="center"

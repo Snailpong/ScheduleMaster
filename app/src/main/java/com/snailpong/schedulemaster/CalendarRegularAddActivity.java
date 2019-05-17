@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +29,11 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
     LinearLayout startlin, endlin;
     TextView starttxt, endtxt;
     CheckBox chkMon, chkTue, chkWed, chkThu, chkFri, chkSat, chkSun;
+    CheckBox chkVib, chkGPS;
     List<CheckBox> chkArray;
     TimePickerDialog.OnTimeSetListener startTimeSetListener;
     TimePickerDialog.OnTimeSetListener endTimeSetListener;
+    double y, x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,10 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
         chkSun = (CheckBox) findViewById(R.id.checkBox_add_reg_Sun);
 
         chkArray = Arrays.asList(chkMon, chkTue, chkWed, chkThu, chkFri, chkSat, chkSun);
+
+        chkVib = (CheckBox)findViewById(R.id.checkBox_add_reg_Vib);
+        chkGPS = (CheckBox)findViewById(R.id.checkBox_add_reg_GPS);
+        chkGPS.setEnabled(false);
 
         add = (Button)findViewById(R.id.dia_add_reg_add);
         cancel = (Button)findViewById(R.id.dia_add_reg_cancel);
@@ -93,7 +100,7 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
 
 
                 if(day != 0 || starttxt.getText().toString() == endtxt.getText().toString() || name.getText().toString().length() <= 1) {
-                    helper.addRegular(db, name.getText().toString(), day, starttxt.getText().toString(), endtxt.getText().toString());
+                    helper.addRegular(db, name.getText().toString(), day, starttxt.getText().toString(), endtxt.getText().toString(), chkVib.isChecked(), chkGPS.isChecked(), y, x);
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarRegularAddActivity.this);
@@ -123,6 +130,18 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(CalendarRegularAddActivity.this, endTimeSetListener, endhour, endmin, false).show();
+            }
+        });
+
+        chkVib.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    chkGPS.setEnabled(true);
+                } else {
+                    chkGPS.setChecked(false);
+                    chkGPS.setEnabled(false);
+                }
             }
         });
 
