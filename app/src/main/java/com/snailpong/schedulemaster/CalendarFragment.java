@@ -84,7 +84,7 @@ public class CalendarFragment extends Fragment {
                     timeTable.setShowHeader(true);
                     timeTable.setTableMode(TimeTableView.TableMode.SHORT);
                     timeTable.setTimeTable(getMillis("2017-11-10 00:00:00"), mShortSamples);
-                }
+            }
             }
         });
     }
