@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -73,12 +71,14 @@ public class SignupActivity extends AppCompatActivity {
                                     UserModel userModel = new UserModel();
                                     userModel.userName = name.getText().toString();
                                     userModel.profileImageUrl = "null";
-
+                                    userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    userModel.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                    userModel.friends.put(uid, true);
                                     FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             SignupActivity.this.finish();
-                                            // 회원가입 완료 후 이동할 프래그머트 지정해 주는게 좋을 듯.
+                                            // 회원가입 완료 후 이동할 프래그머트 지정할 것.
                                         }
                                     });
                                 } else {
@@ -92,12 +92,14 @@ public class SignupActivity extends AppCompatActivity {
                                             UserModel userModel = new UserModel();
                                             userModel.userName = name.getText().toString();
                                             userModel.profileImageUrl = imageUrl;
+                                            userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                            userModel.email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
                                             FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     SignupActivity.this.finish();
-                                                    // 회원가입 완료 후 이동할 프래그머트 지정해 주는게 좋을 듯.
+                                                    // 회원가입 완료 후 이동할 프래그머트 지정할 것.
                                                 }
                                             });
                                         }

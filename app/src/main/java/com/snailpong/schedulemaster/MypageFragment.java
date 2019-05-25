@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +28,14 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 public class MypageFragment extends Fragment {
+    private FragmentManager fragmentManager = getFragmentManager();
     private TextView nick;
     private TextView mail;
     private ImageView profileImg;
     private LinearLayout profilelayout;
     private LinearLayout nicknamelayout;
     private LinearLayout nickname;
+    private LinearLayout myfriend;
     private boolean logined = false;
 
     public MypageFragment() {
@@ -48,6 +52,7 @@ public class MypageFragment extends Fragment {
         profilelayout = (LinearLayout) view.findViewById(R.id.mypage_profilelayout);
         nicknamelayout = (LinearLayout) view.findViewById(R.id.mypage_nicknamelayout);
         nickname = (LinearLayout) view.findViewById(R.id.mypage_nickname);
+        myfriend = (LinearLayout) view.findViewById(R.id.mypage_myfriend);
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -59,6 +64,7 @@ public class MypageFragment extends Fragment {
                     String email = user.getEmail();
                     DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users/" + uid);
                     mail.setText(email);
+
                     dataRef.child("userName").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -87,6 +93,13 @@ public class MypageFragment extends Fragment {
 
                         }
                     });
+                    myfriend.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view) {
+                            TabbedActivity activity = (TabbedActivity) getActivity();
+                            activity.onFragmentChange(0);
+                        }
+                    });
                     profilelayout.setVisibility(View.VISIBLE);
                     nicknamelayout.setVisibility(View.VISIBLE);
                     nickname.setVisibility(View.VISIBLE);
@@ -98,8 +111,6 @@ public class MypageFragment extends Fragment {
                 }
             }
         });
-        // Inflate the layout for this fragment
         return view;
     }
-
 }
