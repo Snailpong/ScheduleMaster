@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.snailpong.schedulemaster.LoginActivity;
+import com.snailpong.schedulemaster.R;
 
 
 public class SettingFragment extends Fragment {

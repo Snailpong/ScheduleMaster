@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.fragment;
 
 
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.snailpong.schedulemaster.R;
 import com.snailpong.schedulemaster.model.UserModel;
 
 import java.util.HashMap;
@@ -136,6 +137,9 @@ public class AddFriendFragment extends Fragment {
                     if (notAdded) {
                         friends.put(thisUid, true);
                         dataRef.setValue(friends);
+                        Toast.makeText(getContext(), "친구가 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(AddFriendFragment.this).commit();
+                        getActivity().getSupportFragmentManager().popBackStack();
                     } else {
                         Toast.makeText(getContext(), "이미 친구로 등록되어 있습니다.", Toast.LENGTH_SHORT).show();
                     }

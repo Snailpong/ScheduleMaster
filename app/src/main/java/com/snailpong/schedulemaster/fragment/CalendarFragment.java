@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,13 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
 import com.github.eunsiljo.timetablelib.data.TimeGridData;
 import com.github.eunsiljo.timetablelib.data.TimeTableData;
 import com.github.eunsiljo.timetablelib.view.TimeTableView;
 import com.github.eunsiljo.timetablelib.viewholder.TimeTableItemViewHolder;
+import com.snailpong.schedulemaster.CalendarInregularAddActivity;
+import com.snailpong.schedulemaster.CalendarInregularModifyActivity;
+import com.snailpong.schedulemaster.CalendarRegularAddActivity;
+import com.snailpong.schedulemaster.DBHelper;
+import com.snailpong.schedulemaster.R;
+import com.snailpong.schedulemaster.dialog.TableClickedDialog;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

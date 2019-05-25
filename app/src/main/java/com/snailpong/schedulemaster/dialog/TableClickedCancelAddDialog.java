@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.snailpong.schedulemaster.R;
 
 public class TableClickedCancelAddDialog extends DialogFragment {
 

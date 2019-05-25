@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.snailpong.schedulemaster.R;
+import com.snailpong.schedulemaster.TabbedActivity;
 
 import org.w3c.dom.Text;
 

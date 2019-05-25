@@ -1,4 +1,4 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.snailpong.schedulemaster.AlarmAdapter;
+import com.snailpong.schedulemaster.AlarmClass;
+import com.snailpong.schedulemaster.R;
 
 import java.util.ArrayList;
 

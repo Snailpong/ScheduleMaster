@@ -1,6 +1,5 @@
-package com.snailpong.schedulemaster;
+package com.snailpong.schedulemaster.dialog;
 
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,7 +13,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.snailpong.schedulemaster.AddDeadlineActivity;
+import com.snailpong.schedulemaster.CalendarRegularModifyActivity;
+import com.snailpong.schedulemaster.DBHelper;
+import com.snailpong.schedulemaster.LoadingActivity;
+import com.snailpong.schedulemaster.R;
 
 public class TableClickedDialog extends DialogFragment {
 
