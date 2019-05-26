@@ -35,7 +35,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음.
-    AlarmAdapter(ArrayList<AlarmClass> list) {
+    public AlarmAdapter(ArrayList<AlarmClass> list) {
         mData = list ;
     }
 
