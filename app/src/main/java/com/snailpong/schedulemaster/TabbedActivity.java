@@ -20,11 +20,12 @@ import com.snailpong.schedulemaster.fragment.SettingFragment;
 public class TabbedActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private CalendarFragment menu1Fragment = new CalendarFragment();
+    private Fragment menu1Fragment = new CalendarFragment();
     private Fragment menu2Fragment = new AlarmFragment();
-    private MypageFragment menu3Fragment;
-    private SettingFragment menu4Fragment = new SettingFragment();
+    private Fragment menu3Fragment;
+    private Fragment menu4Fragment = new SettingFragment();
     private FragmentTransaction transaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,6 @@ public class TabbedActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
     public void onFragmentChange(int index) {
@@ -74,6 +74,10 @@ public class TabbedActivity extends AppCompatActivity {
         else if (index == 1) {
             fragment = new AddFriendFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).addToBackStack(null).commitAllowingStateLoss();
+        }
+        else if (index == 2) {
+            fragment = new MypageFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment).commitAllowingStateLoss();
         }
     }
 }

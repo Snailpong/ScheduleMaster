@@ -58,6 +58,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (email.getText().toString().isEmpty() || name.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
                     return;
                 }
+
                 FirebaseAuth.getInstance()
                         .createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {

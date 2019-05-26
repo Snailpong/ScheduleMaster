@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signOut();
+        //firebaseAuth.signOut();
 
         id = (EditText) findViewById(R.id.loginActivity_editText_id);
         password = (EditText) findViewById(R.id.loginActivity_editText_password);
@@ -67,16 +67,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // 로그인
-                    //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    //startActivity(intent);
-                    finish(); // 자기를 닫는다.
-                } else {
-                    // 로그아웃
+                    Toast.makeText(LoginActivity.this, "환영합니다!", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             }
         };
-
     }
     void loginEvent() {
         firebaseAuth.signInWithEmailAndPassword(id.getText().toString(),password.getText().toString())

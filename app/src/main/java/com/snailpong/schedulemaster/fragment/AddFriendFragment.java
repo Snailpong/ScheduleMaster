@@ -56,7 +56,6 @@ public class AddFriendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String key = keyword.getText().toString();
-                found.setVisibility(View.GONE);
                 if(key.isEmpty()) {
                     Toast.makeText(getContext(), "이메일 주소를 입력하십시요.", Toast.LENGTH_SHORT).show();
                 } else if (FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(key)) {
