@@ -106,6 +106,7 @@ public class AddFriendFragment extends Fragment {
                 foundname.setText(userModel.userName);
                 found.setVisibility(View.VISIBLE);
             } else {
+                found.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "없어.", Toast.LENGTH_SHORT).show();
             }
         }

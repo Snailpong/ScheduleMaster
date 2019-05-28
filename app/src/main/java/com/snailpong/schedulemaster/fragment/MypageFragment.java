@@ -1,18 +1,12 @@
 package com.snailpong.schedulemaster.fragment;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.snailpong.schedulemaster.R;
 import com.snailpong.schedulemaster.TabbedActivity;
 import com.snailpong.schedulemaster.dialog.EditNickNameDialog;
-import com.snailpong.schedulemaster.dialog.TableClickedDialog;
-
-import org.w3c.dom.Text;
+import com.snailpong.schedulemaster.dialog.EditPasswordDialog;
 
 public class MypageFragment extends Fragment {
     private FragmentManager fragmentManager = getFragmentManager();
@@ -39,9 +31,11 @@ public class MypageFragment extends Fragment {
     private ImageView profileImg;
     private LinearLayout profilelayout;
     private LinearLayout nicknamelayout;
-    private LinearLayout nickname;
+    private LinearLayout editNickname;
+    private LinearLayout editPassword;
     private LinearLayout friendlayout;
     private LinearLayout myfriend;
+    private FirebaseAuth.AuthStateListener authStateListener;
     private boolean logined = false;
 
     @Override
@@ -52,12 +46,13 @@ public class MypageFragment extends Fragment {
         mail = (TextView) view.findViewById(R.id.mypage_mail);
         profileImg = (ImageView) view.findViewById(R.id.mypage_profileimg);
         profilelayout = (LinearLayout) view.findViewById(R.id.mypage_profilelayout);
-        nicknamelayout = (LinearLayout) view.findViewById(R.id.mypage_nicknamelayout);
-        nickname = (LinearLayout) view.findViewById(R.id.mypage_nickname);
+        nicknamelayout = (LinearLayout) view.findViewById(R.id.mypage_editinfolayout);
+        editNickname = (LinearLayout) view.findViewById(R.id.mypage_editnickname);
+        editPassword = (LinearLayout) view.findViewById(R.id.mypage_editpassword);
         friendlayout = (LinearLayout) view.findViewById(R.id.mypage_friendlayout);
         myfriend = (LinearLayout) view.findViewById(R.id.mypage_friend);
 
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -97,13 +92,15 @@ public class MypageFragment extends Fragment {
                         }
                     });
                     myfriend.setOnClickListener(new View.OnClickListener(){
+
                         @Override
                         public void onClick(View view) {
                             TabbedActivity activity = (TabbedActivity) getActivity();
                             activity.onFragmentChange(0);
                         }
                     });
-                    nickname.setOnClickListener(new View.OnClickListener() {
+                    editNickname.setOnClickListener(new View.OnClickListener() {
+
                         @Override
                         public void onClick(View view) {
                             Bundle args = new Bundle();
@@ -113,21 +110,44 @@ public class MypageFragment extends Fragment {
                             dialog.show(getActivity().getSupportFragmentManager(),"tag");
                         }
                     });
+                    editPassword.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            EditPasswordDialog dialog = new EditPasswordDialog();
+                            dialog.show(getActivity().getSupportFragmentManager(), "tag");
+                        }
+                    });
                     profilelayout.setVisibility(View.VISIBLE);
                     nicknamelayout.setVisibility(View.VISIBLE);
-                    nickname.setVisibility(View.VISIBLE);
+                    editNickname.setVisibility(View.VISIBLE);
+                    editPassword.setVisibility(View.VISIBLE);
                     friendlayout.setVisibility(View.VISIBLE);
                     myfriend.setVisibility(View.VISIBLE);
                 } else {
                     logined = false;
                     profilelayout.setVisibility(View.GONE);
                     nicknamelayout.setVisibility(View.GONE);
-                    nickname.setVisibility(View.GONE);
+                    editNickname.setVisibility(View.GONE);
+                    editPassword.setVisibility(View.GONE);
                     friendlayout.setVisibility(View.GONE);
                     myfriend.setVisibility(View.GONE);
                 }
             }
-        });
+        };
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
     }
 }

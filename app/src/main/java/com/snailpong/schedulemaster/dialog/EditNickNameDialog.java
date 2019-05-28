@@ -51,7 +51,7 @@ public class EditNickNameDialog extends DialogFragment {
                     dataRef.setValue(newName).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(getContext(), "변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "닉네임 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                             DialogFragment dialogFragment = (DialogFragment) fragment;
                             dialogFragment.dismiss();
                         }

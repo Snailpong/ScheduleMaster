@@ -29,7 +29,7 @@
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/signupActivity_editText_name"
-            android:hint="이름"
+            android:hint="닉네임"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/signupActivity_editText_password"
-            android:hint="패스워드"
+            android:hint="패스워드 (6자 이상)"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

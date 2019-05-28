@@ -22,15 +22,12 @@ public class TableClickedCancelAddDialog extends DialogFragment {
 
     private Fragment fragment;
 
-    public TableClickedCancelAddDialog() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_table_cancel_add, container, false);
         fragment = this;
-        Bundle args = getArguments();
-        String value = args.getString("key");
+        //Bundle args = getArguments();
+        //String value = args.getString("key");
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         // 참조 주소 : http://blog.naver.com/qbxlvnf11/221436373954
@@ -41,9 +38,10 @@ public class TableClickedCancelAddDialog extends DialogFragment {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 String date = year + "/" + monthOfYear + "/" + dayOfMonth;
-                //Toast.makeText(getActivity().getApplicationContext(), date, Toast.LENGTH_SHORT).show();
+
             }
         });
+
         Button cancelBtn = (Button) view.findViewById(R.id.cancelCancelBtn);
         cancelBtn.setOnClickListener(new View.OnClickListener(){
             @Override

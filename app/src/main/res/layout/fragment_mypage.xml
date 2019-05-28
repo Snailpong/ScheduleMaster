@@ -83,7 +83,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
             <LinearLayout
-                android:id="@+id/mypage_nicknamelayout"
+                android:id="@+id/mypage_editinfolayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginTop="20dp"
@@ -95,11 +95,11 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="닉네임"/>
+                    android:text="개인 정보"/>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/mypage_nickname"
+                android:id="@+id/mypage_editnickname"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="?attr/selectableItemBackground"
@@ -113,6 +113,23 @@
                     android:textSize="17sp"
                     android:textColor="#000"
                     android:text="닉네임 변경"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mypage_editpassword"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="17sp"
+                    android:textColor="#000"
+                    android:text="패스워드 변경"/>
             </LinearLayout>
 
             <LinearLayout
