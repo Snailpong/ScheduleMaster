@@ -98,8 +98,7 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
                 for(int i=0; i!=7; i++)
                     if(chkArray.get(i).isChecked()) day += (1 << i);
 
-
-                if(day != 0 || starttxt.getText().toString() == endtxt.getText().toString() || name.getText().toString().length() <= 1) {
+                if(day != 0 && starttxt.getText().toString() != endtxt.getText().toString() && name.getText().toString().length() > 1) {
                     helper.addRegular(db, name.getText().toString(), day, starttxt.getText().toString(), endtxt.getText().toString(), chkVib.isChecked(), chkGPS.isChecked(), y, x);
                     finish();
                 } else {
