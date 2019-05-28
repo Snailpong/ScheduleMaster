@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.snailpong.schedulemaster.R;
 import com.snailpong.schedulemaster.TabbedActivity;
+import com.snailpong.schedulemaster.dialog.EditNickNameDialog;
+import com.snailpong.schedulemaster.dialog.TableClickedDialog;
 
 import org.w3c.dom.Text;
 
@@ -37,12 +40,9 @@ public class MypageFragment extends Fragment {
     private LinearLayout profilelayout;
     private LinearLayout nicknamelayout;
     private LinearLayout nickname;
+    private LinearLayout friendlayout;
     private LinearLayout myfriend;
     private boolean logined = false;
-
-    public MypageFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +54,8 @@ public class MypageFragment extends Fragment {
         profilelayout = (LinearLayout) view.findViewById(R.id.mypage_profilelayout);
         nicknamelayout = (LinearLayout) view.findViewById(R.id.mypage_nicknamelayout);
         nickname = (LinearLayout) view.findViewById(R.id.mypage_nickname);
-        myfriend = (LinearLayout) view.findViewById(R.id.mypage_myfriend);
+        friendlayout = (LinearLayout) view.findViewById(R.id.mypage_friendlayout);
+        myfriend = (LinearLayout) view.findViewById(R.id.mypage_friend);
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -70,7 +71,6 @@ public class MypageFragment extends Fragment {
                     dataRef.child("userName").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.d("TAG", "data change");
                             String name = dataSnapshot.getValue(String.class);
                             nick.setText(name);
                         }
@@ -86,6 +86,7 @@ public class MypageFragment extends Fragment {
                             String url = dataSnapshot.getValue(String.class);
                             // 사용자가 이미지를 업로드한 경우
                             if (!url.equals("null")) {
+                                while (getActivity() == null);
                                 Glide.with(getContext()).load(url).into(profileImg);
                             }
                         }
@@ -102,14 +103,28 @@ public class MypageFragment extends Fragment {
                             activity.onFragmentChange(0);
                         }
                     });
+                    nickname.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle args = new Bundle();
+                            args.putString("userName", nick.getText().toString());
+                            EditNickNameDialog dialog = new EditNickNameDialog();
+                            dialog.setArguments(args);
+                            dialog.show(getActivity().getSupportFragmentManager(),"tag");
+                        }
+                    });
                     profilelayout.setVisibility(View.VISIBLE);
                     nicknamelayout.setVisibility(View.VISIBLE);
                     nickname.setVisibility(View.VISIBLE);
+                    friendlayout.setVisibility(View.VISIBLE);
+                    myfriend.setVisibility(View.VISIBLE);
                 } else {
                     logined = false;
                     profilelayout.setVisibility(View.GONE);
                     nicknamelayout.setVisibility(View.GONE);
                     nickname.setVisibility(View.GONE);
+                    friendlayout.setVisibility(View.GONE);
+                    myfriend.setVisibility(View.GONE);
                 }
             }
         });
