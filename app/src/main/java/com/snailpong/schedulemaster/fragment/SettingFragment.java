@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.snailpong.schedulemaster.LoginActivity;
 import com.snailpong.schedulemaster.R;
+import com.snailpong.schedulemaster.SyncActivity;
 
 
 public class SettingFragment extends Fragment {
@@ -45,6 +46,15 @@ public class SettingFragment extends Fragment {
             }
         });
         // Inflate the layout for this fragment
+
+        LinearLayout sync = (LinearLayout) view.findViewById(R.id.setting_sync);
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SyncActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

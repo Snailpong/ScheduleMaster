@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CalendarInregularModifyActivity"></activity>
+        <activity android:name=".SyncActivity"></activity>
+        <activity android:name=".CalendarInregularModifyActivity" />
         <activity android:name=".CalendarInregularAddActivity" />
         <activity android:name=".LoadingActivity" />
         <activity android:name=".CalendarRegularModifyActivity" />
@@ -25,8 +27,8 @@
         <activity android:name=".AddNoclassActivity" />
         <activity android:name=".CalendarRegularAddActivity" />
         <activity android:name=".SignupActivity" />
-        <activity android:name=".MapActivity"/>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".MapActivity" />
+        <activity android:name=".LoginActivity" />
         <activity
             android:name=".TabbedActivity"
             android:label="@string/title_activity_tabbed"
