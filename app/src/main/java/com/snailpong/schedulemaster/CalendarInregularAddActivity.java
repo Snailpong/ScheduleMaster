@@ -1,6 +1,8 @@
 package com.snailpong.schedulemaster;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,17 +11,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class CalendarInregularAddActivity extends AppCompatActivity {
 
-    private int starthour, startmin, endhour, endmin;
+    private int starthour, startmin, endhour, endmin, ayear, amonth, aday;
+    String days;
 
     DBHelper helper;
     SQLiteDatabase db;
@@ -31,7 +37,9 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
     CheckBox chkVib, chkGPS;
     TimePickerDialog.OnTimeSetListener startTimeSetListener;
     TimePickerDialog.OnTimeSetListener endTimeSetListener;
+    DatePickerDialog.OnDateSetListener dateListener;
     double y, x;
+    //DateUtils.DAY_IN_MILLIS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +62,27 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
         endtxt = (TextView)findViewById(R.id.calender_add_inreg_endtime_txt);
         datetxt = (TextView) findViewById(R.id.calender_add_inreg_date_txt);
 
+        Calendar c = Calendar.getInstance();
+        ayear = c.get(Calendar.YEAR);
+        amonth = c.get(Calendar.MONTH);
+        aday = c.get(Calendar.DAY_OF_MONTH);
+        datetxt.setText(String.valueOf(ayear)+"년 "+String.valueOf(amonth+1)+"월 "+String.valueOf(aday)+"일");
+        days = String.valueOf(ayear)+"-"+String.format("%02d",amonth+1)+"-"+String.format("%02d",aday);
+
         helper = new DBHelper(CalendarInregularAddActivity.this, "db.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
+        dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                ayear = year;
+                amonth = month;
+                aday = day;
+                datetxt.setText(String.valueOf(year)+"년 "+String.valueOf(month+1)+"월 "+String.valueOf(day)+"일");
+                days = String.valueOf(year)+"-"+String.format("%02d",month+1)+"-"+String.format("%02d",day);
+                Toast.makeText(CalendarInregularAddActivity.this, days, Toast.LENGTH_LONG).show();
+            }
+        };
 
         startTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -81,12 +107,27 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
             }
         };
 
+        datelin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(CalendarInregularAddActivity.this, dateListener, ayear, amonth, aday).show();
+            }
+        });
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(starttxt.getText().toString() == endtxt.getText().toString() || name.getText().toString().length() <= 1) {
-                    /////////////////////////
+                if(starttxt.getText().toString() != endtxt.getText().toString() && name.getText().toString().length() > 1) {
+                    ContentValues values = new ContentValues();
+                    values.put("name", name.getText().toString());
+                    values.put("day", days);
+                    values.put("starttime", starttxt.getText().toString());
+                    values.put("endtime", endtxt.getText().toString());
+                    values.put("vib", chkVib.isChecked()?1:0);
+                    values.put("gps", chkGPS.isChecked()?1:0);
+                    values.put("y",y);
+                    values.put("x",x);
+                    db.insert("daily", null, values);
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarInregularAddActivity.this);

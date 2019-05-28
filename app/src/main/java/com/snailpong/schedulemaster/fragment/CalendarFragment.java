@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster.fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
 import com.github.eunsiljo.timetablelib.data.TimeGridData;
@@ -31,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +51,8 @@ public class CalendarFragment extends Fragment {
     private List<String> mShortHeaders = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
     private List<Integer> mColors = Arrays.asList(R.color.color_table_1_light, R.color.color_table_2_light, R.color.color_table_3_light,
             R.color.color_table_4_light, R.color.color_table_5_light, R.color.color_table_6_light, R.color.color_table_7_light);
+    private List<Integer> mColors2 = Arrays.asList(R.color.color_table_1, R.color.color_table_2, R.color.color_table_3,
+            R.color.color_table_4, R.color.color_table_5, R.color.color_table_6, R.color.color_table_7);
 
     private long mNow = System.currentTimeMillis();
 
@@ -93,7 +99,7 @@ public class CalendarFragment extends Fragment {
                         dialogFragment.show(fm, String.valueOf(id));
                     } else {
                         Intent intent = new Intent(getActivity(), CalendarInregularModifyActivity.class);
-                        intent.putExtra("id", id);
+                        intent.putExtra("id", id-1000);
                         startActivity(intent);
                     }
                 } else {
@@ -196,7 +202,6 @@ public class CalendarFragment extends Fragment {
 
     private void initLong() {
         mLongSamples = new ArrayList<>();
-        Cursor c = db.query("weekly", null, null, null, null, null, null);
         ArrayList<TimeData> values = new ArrayList<>();
 
         Date date = new Date(mNow);
@@ -206,13 +211,19 @@ public class CalendarFragment extends Fragment {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
 
+        int ayear = cal.get(Calendar.YEAR);
+        int amonth = cal.get(Calendar.MONTH);
+        int aday = cal.get(Calendar.DAY_OF_MONTH);
+        String days = String.valueOf(ayear)+"-"+String.format("%02d",amonth+1)+"-"+String.format("%02d",aday);
+
         int dayNum = cal.get(Calendar.DAY_OF_WEEK);
         dayNum = (dayNum == 1)?6:dayNum-2;
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        //Toast.makeText(getActivity(), sdf.format(date), Toast.LENGTH_LONG).show();
 
-
+        //values.add(new TimeData(30, "dfef", R.color.color_table_1_light, getMillis("2019-05-28 00:00:00"), getMillis("2019-05-28 10:00:00")));
+        Cursor c = db.query("weekly", null, null, null, null, null, null);
+        //values.add(new TimeData(30, "dfef", R.color.color_table_1_light, getMillis("2019-05-28 09:00:00"), getMillis("2019-05-28 10:00:00")));
         while(c.moveToNext()) {
             int id = c.getInt(c.getColumnIndex("_id"));
             String name = c.getString(c.getColumnIndex("name"));
@@ -220,12 +231,33 @@ public class CalendarFragment extends Fragment {
             String starttime = c.getString(c.getColumnIndex("starttime"));
             String endtime = c.getString(c.getColumnIndex("endtime"));
 
-            if((day>>dayNum)%2==1)
+            if((day>>dayNum)%2==1){
                 values.add(new TimeData(id, name, mColors.get(id % 7), getMillis(sdf.format(date) + " " + starttime + ":00"),
                         getMillis(sdf.format(date) + " " + endtime + ":00")));
+                //Toast.makeText(getActivity(), String.valueOf(getMillis(sdf.format(date) + " " + starttime + ":00")), Toast.LENGTH_SHORT).show();
+            }
         }
 
-        //values.add(new TimeData(0, "신호및시스템", R.color.color_table_1_light, getMillis("2019-05-17 10:30:00"), getMillis("2019-05-17 11:45:00")));
+        Cursor c1 = db.query("daily", null, null, null, null, null, null);
+        //Toast.makeText(getActivity(), String.valueOf(values.size()), Toast.LENGTH_LONG).show();
+        while(c1.moveToNext()) {
+            int id = c1.getInt(c1.getColumnIndex("_id"))+1000;
+            String name = c1.getString(c1.getColumnIndex("name"));
+            String day = c1.getString(c1.getColumnIndex("day"));
+            String starttime = c1.getString(c1.getColumnIndex("starttime"));
+            String endtime = c1.getString(c1.getColumnIndex("endtime"));
+            values.add(new TimeData(id, name, mColors.get(id % 7), getMillis(day + " " + starttime + ":00"),
+                    getMillis(day + " " + endtime + ":00")));
+        }
+
+
+        Collections.sort(values, new Comparator<TimeData>() {
+            @Override
+            public int compare(TimeData t1, TimeData t2) {
+                return t2.getStartMills()<t1.getStartMills()?1:-1;
+            }
+        });
+
         //values.add(new TimeData(1, "운영체제", R.color.color_table_2_light, getMillis("2019-05-20 13:30:00"), getMillis("2019-05-20 14:45:00")));
         //values.add(new TimeData(2, "컴퓨터구조", R.color.color_table_3_light, getMillis("2017-11-10 15:00:00"), getMillis("2017-11-10 16:15:00")));
         //values.add(new TimeData(3, "교수님 상담", R.color.color_table_4_light, getMillis("2017-11-10 17:00:00"), getMillis("2017-11-10 19:00:00")));
