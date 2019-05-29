@@ -1,8 +1,10 @@
 package com.snailpong.schedulemaster;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SyncActivity extends AppCompatActivity {
 
@@ -57,8 +62,55 @@ public class SyncActivity extends AppCompatActivity {
                 builder.setPositiveButton("예",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                ///////////
-                                finish();
+                                mDatabase.child("users").child(currentFirebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        db.execSQL("drop table if exists weekly");
+                                        db.execSQL("drop table if exists daily");
+                                        helper.onCreate(db);
+
+                                        for(DataSnapshot d : dataSnapshot.child("weekly").getChildren()){
+                                            String name = d.child("name").getValue(String.class);
+                                            int day = d.child("day").getValue(Integer.class);
+                                            String starttime = d.child("starttime").getValue(String.class);
+                                            String endtime = d.child("endtime").getValue(String.class);
+                                            boolean vib = d.child("vib").getValue(Integer.class)==1;
+                                            boolean gps = d.child("gps").getValue(Integer.class)==1;
+                                            double y = d.child("y").getValue(Double.class);
+                                            double x = d.child("x").getValue(Double.class);
+
+                                            helper.addRegular(db, name, day, starttime, endtime, vib, gps, y, x);
+                                        }
+
+                                        for(DataSnapshot d : dataSnapshot.child("daily").getChildren()){
+                                            String name = d.child("name").getValue(String.class);
+                                            String day = d.child("day").getValue(String.class);
+                                            String starttime = d.child("starttime").getValue(String.class);
+                                            String endtime = d.child("endtime").getValue(String.class);
+                                            int vib = d.child("vib").getValue(Integer.class);
+                                            int gps = d.child("gps").getValue(Integer.class);
+                                            double y = d.child("y").getValue(Double.class);
+                                            double x = d.child("x").getValue(Double.class);
+
+                                            ContentValues values = new ContentValues();
+                                            values.put("name", name);
+                                            values.put("day", day);
+                                            values.put("starttime", starttime);
+                                            values.put("endtime", endtime);
+                                            values.put("vib", vib);
+                                            values.put("gps", gps);
+                                            values.put("y",y);
+                                            values.put("x",x);
+                                            db.insert("daily", null, values);
+                                        }
+
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                                });
+
                             }
                         });
                 builder.setNegativeButton("아니오", null);

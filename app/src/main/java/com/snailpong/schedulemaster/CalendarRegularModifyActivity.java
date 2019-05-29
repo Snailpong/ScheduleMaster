@@ -182,5 +182,23 @@ public class CalendarRegularModifyActivity extends AppCompatActivity {
                 }
             }
         });
+
+        chkGPS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Intent intent = new Intent(CalendarRegularModifyActivity.this, MapActivity.class);
+                startActivityForResult(intent, 3000);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 3000) {
+            if(resultCode == RESULT_CANCELED){
+                chkGPS.setChecked(false);
+                Toast.makeText(this, "주소 미발견", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
