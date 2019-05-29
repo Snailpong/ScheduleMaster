@@ -39,6 +39,7 @@ public class TableClickedDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddDeadlineActivity.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
             }
         });

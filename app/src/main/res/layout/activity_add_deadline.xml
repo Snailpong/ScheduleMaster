@@ -17,7 +17,6 @@
         android:layout_marginTop="15dp"
         android:hint="제목"
         android:background="@null"
-        android:text="HW#9"
         android:textSize="30sp"
         android:textColor="#000"/>
 
@@ -116,7 +115,7 @@
                 android:layout_marginRight="15dp"
                 android:textSize="17sp"
                 android:textColor="#000"
-                android:text="3시간 전"/>
+                android:text="1시간 전"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -131,8 +130,27 @@
             android:layout_alignParentBottom="true"
             android:background="#eee"
             android:orientation="horizontal">
+
             <LinearLayout
-                android:id="@+id/addno_cancel"
+                android:id="@+id/deadline_add"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="추가"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/deadline_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
@@ -148,25 +166,6 @@
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimaryDark"
                     android:text="취소"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/addno_check"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="확인"/>
             </LinearLayout>
 
         </LinearLayout>

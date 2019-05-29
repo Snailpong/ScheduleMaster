@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.snailpong.schedulemaster.LoginActivity;
+import com.snailpong.schedulemaster.MapActivity;
 import com.snailpong.schedulemaster.R;
 import com.snailpong.schedulemaster.SyncActivity;
 
@@ -41,8 +42,8 @@ public class SettingFragment extends Fragment {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivityForResult(intent, 3000);
             }
         });
         // Inflate the layout for this fragment
@@ -57,5 +58,4 @@ public class SettingFragment extends Fragment {
         });
         return view;
     }
-
 }
