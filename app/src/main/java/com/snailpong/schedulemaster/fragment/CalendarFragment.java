@@ -266,8 +266,6 @@ public class CalendarFragment extends Fragment {
         timeTable.setShowHeader(false);
 
         timeTable.setTimeTable(cal.getTimeInMillis(), mLongSamples);
-
-
     }
 
     public static long getMillis(String day) {

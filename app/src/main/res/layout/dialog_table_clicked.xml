@@ -127,6 +127,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/dia_clicked_memo"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:clickable="true"
