@@ -1,33 +1,31 @@
 package com.snailpong.schedulemaster.dialog;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.snailpong.schedulemaster.R;
 
-public class TableClickedCancelAddDialog extends DialogFragment {
+public class CancelAddDialog extends DialogFragment {
 
     private Fragment fragment;
-
+    private Button addBtn;
+    private Button cancelBtn;
+    //private int id;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_table_cancel_add, container, false);
         fragment = this;
-        //Bundle args = getArguments();
-        //String value = args.getString("key");
+        cancelBtn = (Button) view.findViewById(R.id.canceladd_cancelBtn);
+        addBtn = (Button) view.findViewById(R.id.canceladd_addBtn);
+        Bundle args = getArguments();
+        String value = args.getString("key");
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         // 참조 주소 : http://blog.naver.com/qbxlvnf11/221436373954
@@ -38,11 +36,10 @@ public class TableClickedCancelAddDialog extends DialogFragment {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 String date = year + "/" + monthOfYear + "/" + dayOfMonth;
-
             }
         });
 
-        Button cancelBtn = (Button) view.findViewById(R.id.cancelCancelBtn);
+
         cancelBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

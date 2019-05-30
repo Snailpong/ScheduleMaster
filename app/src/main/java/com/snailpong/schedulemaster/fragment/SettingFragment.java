@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,12 +43,11 @@ public class SettingFragment extends Fragment {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, 3000);
             }
         });
         // Inflate the layout for this fragment
-
         LinearLayout sync = (LinearLayout) view.findViewById(R.id.setting_sync);
         sync.setOnClickListener(new View.OnClickListener() {
             @Override

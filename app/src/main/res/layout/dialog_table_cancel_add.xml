@@ -24,13 +24,13 @@
             android:gravity="right"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/cancelAddBtn"
+                android:id="@+id/canceladd_addBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/PrimaryFlatButton"
                 android:text="추가"/>
             <Button
-                android:id="@+id/cancelCancelBtn"
+                android:id="@+id/canceladd_cancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/PrimaryFlatButton"

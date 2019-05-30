@@ -25,9 +25,6 @@ public class TableClickedDialog extends DialogFragment {
     private Fragment fragment;
     private int id;
 
-    public TableClickedDialog() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_table_clicked, container, false);
@@ -44,14 +41,14 @@ public class TableClickedDialog extends DialogFragment {
             }
         });
         // 휴일 추가 버튼 이벤트 처리
-        ImageView cancelAddBtn = (ImageView) view.findViewById(R.id.cancelAddBtn);
+        ImageView cancelAddBtn = (ImageView) view.findViewById(R.id.canceladd_addBtn);
         cancelAddBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                args.putString("key", "value");
-                TableClickedCancelAddDialog dialog = new TableClickedCancelAddDialog();
-                dialog.setArguments(args); // 데이터 전달
+                args.putInt("id", id);
+                CancelAddDialog dialog = new CancelAddDialog();
+                dialog.setArguments(args);
                 dialog.show(getActivity().getSupportFragmentManager(),"tag");
             }
         });
@@ -99,7 +96,6 @@ public class TableClickedDialog extends DialogFragment {
                 builder.show();
             }
         });
-
         return view;
     }
 }
