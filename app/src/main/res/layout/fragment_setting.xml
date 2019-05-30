@@ -59,12 +59,13 @@
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical">
                 <TextView
+                    android:id="@+id/setting_goo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:textSize="17sp"
                     android:textColor="#000"
-                    android:text="구글계정 연동"/>
+                    android:text="계정 연동"/>
             </LinearLayout>
 
             <LinearLayout
@@ -99,23 +100,6 @@
                     android:textSize="17sp"
                     android:textColor="#000"
                     android:text="시간표 저장"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/setting_load"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="17sp"
-                    android:textColor="#000"
-                    android:text="시간표 불러오기"/>
             </LinearLayout>
 
             <LinearLayout

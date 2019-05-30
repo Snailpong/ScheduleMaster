@@ -45,6 +45,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        setTitle("회원가입");
 
         profileImage = (ImageView) findViewById(R.id.signupActivity_imageview_profile);
         profileImage.setOnClickListener(new View.OnClickListener(){

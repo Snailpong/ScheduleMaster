@@ -31,9 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        setTitle("로그인");
         firebaseAuth = FirebaseAuth.getInstance();
-        //firebaseAuth.signOut();
 
         id = (EditText) findViewById(R.id.loginActivity_editText_id);
         password = (EditText) findViewById(R.id.loginActivity_editText_password);
