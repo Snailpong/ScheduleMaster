@@ -37,4 +37,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("x",x);
         db.insert("weekly", null, values);
     }
+
+
 }
