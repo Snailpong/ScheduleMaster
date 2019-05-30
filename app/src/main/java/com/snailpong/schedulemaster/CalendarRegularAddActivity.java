@@ -1,6 +1,7 @@
 package com.snailpong.schedulemaster;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
@@ -144,8 +146,29 @@ public class CalendarRegularAddActivity extends AppCompatActivity{
             }
         });
 
+        chkGPS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    Intent intent = new Intent(CalendarRegularAddActivity.this, MapActivity.class);
+                    startActivityForResult(intent, 3000);
+                }
+            }
+        });
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 3000) {
+            if(resultCode == RESULT_CANCELED){
+                chkGPS.setChecked(false);
+                Toast.makeText(this, "주소 미발견", Toast.LENGTH_SHORT).show();
+            } else if(resultCode == RESULT_OK){
+                y = data.getDoubleExtra("y", 0);
+                x = data.getDoubleExtra("x", 0);
+            }
+        }
     }
     @Override
     protected void onDestroy() {

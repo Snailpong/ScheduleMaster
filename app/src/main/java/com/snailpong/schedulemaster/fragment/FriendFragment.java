@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.snailpong.schedulemaster.FriendScheduleActivity;
 import com.snailpong.schedulemaster.R;
 import com.snailpong.schedulemaster.TabbedActivity;
 import com.snailpong.schedulemaster.model.UserModel;
@@ -118,13 +121,23 @@ public class FriendFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-            UserModel thisModel = friends.get(i);
+            final UserModel thisModel = friends.get(i);
             if (!thisModel.profileImageUrl.equals("null")) {
                 Glide.with(viewHolder.itemView.getContext())
                         .load(thisModel.profileImageUrl)
                         .into(((CustomViewHolder) viewHolder).imageView);
             }
             ((CustomViewHolder) viewHolder).textView.setText(thisModel.userName);
+
+            ((CustomViewHolder) viewHolder).lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), FriendScheduleActivity.class);
+                    intent.putExtra("uid", thisModel.uid);
+                    intent.putExtra("name",thisModel.userName);
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override
@@ -135,9 +148,11 @@ public class FriendFragment extends Fragment {
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public TextView textView;
+            public LinearLayout lin;
 
             public CustomViewHolder(View view) {
                 super(view);
+                lin = (LinearLayout) view.findViewById(R.id.frienditem_lin);
                 imageView = (ImageView) view.findViewById(R.id.frienditem_imageview);
                 textView = (TextView) view.findViewById(R.id.frienditem_textview);
             }

@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.snailpong.schedulemaster.AddDeadlineActivity;
 import com.snailpong.schedulemaster.CalendarRegularModifyActivity;
 import com.snailpong.schedulemaster.DBHelper;
 import com.snailpong.schedulemaster.LoadingActivity;
+import com.snailpong.schedulemaster.MemoActivity;
 import com.snailpong.schedulemaster.R;
 
 public class TableClickedDialog extends DialogFragment {
@@ -96,6 +98,17 @@ public class TableClickedDialog extends DialogFragment {
                 builder.show();
             }
         });
+
+        LinearLayout memo = (LinearLayout)view.findViewById(R.id.dia_clicked_memo);
+        memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MemoActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 }

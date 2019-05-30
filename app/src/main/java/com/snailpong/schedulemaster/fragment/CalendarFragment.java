@@ -51,8 +51,6 @@ public class CalendarFragment extends Fragment {
     private List<String> mShortHeaders = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
     private List<Integer> mColors = Arrays.asList(R.color.color_table_1_light, R.color.color_table_2_light, R.color.color_table_3_light,
             R.color.color_table_4_light, R.color.color_table_5_light, R.color.color_table_6_light, R.color.color_table_7_light);
-    private List<Integer> mColors2 = Arrays.asList(R.color.color_table_1, R.color.color_table_2, R.color.color_table_3,
-            R.color.color_table_4, R.color.color_table_5, R.color.color_table_6, R.color.color_table_7);
 
     private long mNow = System.currentTimeMillis();
 
@@ -268,11 +266,9 @@ public class CalendarFragment extends Fragment {
         timeTable.setShowHeader(false);
 
         timeTable.setTimeTable(cal.getTimeInMillis(), mLongSamples);
-
-
     }
 
-    private long getMillis(String day) {
+    public static long getMillis(String day) {
         DateTime date = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").parseDateTime(day);
         return date.getMillis();
     }

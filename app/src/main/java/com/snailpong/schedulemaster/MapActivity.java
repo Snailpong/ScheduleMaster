@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,6 +50,8 @@ public class MapActivity extends AppCompatActivity
 
     private GoogleMap mGoogleMap = null;
     private Marker currentMarker = null;
+
+    Double latitude = 0.0, longitude = 0.0;
 
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -81,8 +85,35 @@ public class MapActivity extends AppCompatActivity
         setContentView(R.layout.activity_map);
 
         mLayout = findViewById(R.id.layout_map);
+        setTitle("GPS 위치찾기");
 
         Log.d(TAG, "onCreate");
+
+        LinearLayout add = (LinearLayout) findViewById(R.id.map_add);
+        LinearLayout cancel = (LinearLayout) findViewById(R.id.map_cancel);
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(latitude == 0 && longitude == 0) {
+                    Toast.makeText(MapActivity.this, "주소를 입력해주세요", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("y",latitude);
+                    resultIntent.putExtra("x",longitude);
+                    setResult(RESULT_OK,resultIntent);
+                    finish();
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent resultIntent = new Intent();
+                setResult(RESULT_CANCELED,resultIntent);
+                finish();
+            }
+        });
 
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -120,7 +151,7 @@ public class MapActivity extends AppCompatActivity
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
 
-                Log.d(TAG, "onLocationResult : " + markerSnippet);
+                //Log.d(TAG, "onLocationResult : " + markerSnippet);
 
 
                 //현재 위치에 마커 생성하고 이동
@@ -235,13 +266,14 @@ public class MapActivity extends AppCompatActivity
                 MarkerOptions mOptions = new MarkerOptions();
 
                 mOptions.title("마커 좌표");
-                Double latitude = latLng.latitude;
-                Double longitude = latLng.longitude;
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
                 // 마커의 스니펫(간단한 텍스트) 설정
                 mOptions.snippet(latitude.toString() + ", " + longitude.toString());
                 Log.d(TAG, "터치! " + latitude.toString() + ", " + longitude.toString());
                 // LatLng : 위도, 경도 쌍 객체
                 mOptions.position(new LatLng(latitude, longitude));
+                mGoogleMap.clear();
                 // 마커(핀) 추가
                 mGoogleMap.addMarker(mOptions);
             }
@@ -340,7 +372,7 @@ public class MapActivity extends AppCompatActivity
         markerOptions.draggable(true);
 
 
-        currentMarker = mGoogleMap.addMarker(markerOptions);
+        //currentMarker = mGoogleMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mGoogleMap.moveCamera(cameraUpdate);
@@ -501,8 +533,6 @@ public class MapActivity extends AppCompatActivity
                     if (checkLocationServicesStatus()) {
 
                         Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
-
-
                         needRequest = true;
 
                         return;
