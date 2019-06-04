@@ -11,11 +11,21 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //db.execSQL("drop table if exists weekly");
+        db.execSQL("drop table if exists deadline");
         db.execSQL("create table if not exists weekly(_id integer primary key autoincrement, name text, day integer, starttime text, endtime text, vib integer, gps integer, y real, x real);");
         db.execSQL("create table if not exists daily(_id integer primary key autoincrement, name text, day text, starttime text, endtime text, vib integer, gps integer, y real, x real)");
         db.execSQL("create table if not exists noclass(_id integer primary key autoincrement, whatid integer, day text)");
-        db.execSQL("create table if not exists deadline(_id integer primary key autoincrement, name text, whatid integer, day text, endtime text, prev integer)");
+        db.execSQL("create table if not exists deadline(_id integer primary key autoincrement, name text, whatid integer, year integer, month integer, day integer, hour integer, min integer, prev integer)");
+        ContentValues values = new ContentValues();
+        values.put("name", "HW#7");
+        values.put("whatid", 2);
+        values.put("year", 2019);
+        values.put("month", 6);
+        values.put("day", 4);
+        values.put("hour", 17);
+        values.put("min",0);
+        values.put("prev",1);
+        db.insert("deadline", null, values);
     }
 
     @Override

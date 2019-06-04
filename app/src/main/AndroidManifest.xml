@@ -13,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MemoActivity"></activity>
+        <activity android:name=".EditNoclassActivity"></activity>
+        <activity android:name=".EditDeadlineActivity" />
+        <activity android:name=".MypageNoclassActivity" />
+        <activity android:name=".MypageDeadlineActivity" />
+        <activity android:name=".MemoActivity" />
         <activity android:name=".FriendScheduleActivity" />
         <activity android:name=".SyncActivity" />
         <activity android:name=".CalendarInregularModifyActivity" />
@@ -27,7 +31,6 @@
             android:authorities="com.test.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />

@@ -51,34 +51,34 @@ public class FriendFragment extends Fragment {
         return view;
     }
     class FriendFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        List<UserModel> users = new ArrayList<>();;
-        List<UserModel> friends = new ArrayList<>();;
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    List<UserModel> users = new ArrayList<>();;
+                                    List<UserModel> friends = new ArrayList<>();;
+                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        public FriendFragmentRecyclerViewAdapter() {
+                                    public FriendFragmentRecyclerViewAdapter() {
 
-            FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/friends").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    users.clear();
-                    friends.clear();
-                    final Map<String, Boolean> userFriends = (HashMap<String, Boolean>) dataSnapshot.getValue();
+                                        FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/friends").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                users.clear();
+                                                friends.clear();
+                                                final Map<String, Boolean> userFriends = (HashMap<String, Boolean>) dataSnapshot.getValue();
 
-                    if (userFriends != null) {
-                        FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                                    users.add(snapshot.getValue(UserModel.class));
+                                                if (userFriends != null) {
+                                                    FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                                                users.add(snapshot.getValue(UserModel.class));
 
-                                for (UserModel userModel : users)
-                                    if (userFriends.containsKey(userModel.uid))
-                                        friends.add(userModel);
-                                notifyDataSetChanged();
-                            }
+                                                            for (UserModel userModel : users)
+                                                                if (userFriends.containsKey(userModel.uid))
+                                                                    friends.add(userModel);
+                                                            notifyDataSetChanged();
+                                                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
                         });
