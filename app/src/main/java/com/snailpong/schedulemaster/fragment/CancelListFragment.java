@@ -41,6 +41,10 @@ public class CancelListFragment extends Fragment {
                 //R.layout.item_cancel, c,
                 //new String[]{"whatid", "day"},
                // new int[] {R.id.});
+//        SimpleCursorAdapter adapter  = new SimpleCursorAdapter(getActivity(),
+//                R.layout.item_cancel, c,
+//                new String[]{"whatid", "day"},
+//                new int[] {R.id.});
 
 
         return view;
