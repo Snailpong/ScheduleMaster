@@ -42,7 +42,7 @@ public class MypageNoclassActivity extends AppCompatActivity {
             helper = new DBHelper(MypageNoclassActivity.this, "db.db", null, 1);
             db = helper.getWritableDatabase();
             helper.onCreate(db);
-            Cursor c = db.query("Noclass", null, null, null, null, null, null, null);
+            Cursor c = db.query("noclass", null, null, null, null, null, null, null);
             while(c.moveToNext()) {
                 int id = c.getInt(c.getColumnIndex("_id"));
                 int whatid = c.getInt(c.getColumnIndex("whatid"));
@@ -70,13 +70,13 @@ public class MypageNoclassActivity extends AppCompatActivity {
             final String subname = c.getString(c.getColumnIndex("name"));
             ((MypageNoclassActivity.NoclassRecyclerViewAdapter.CustomViewHolder) viewHolder).sub.setText(subname);
             ((MypageNoclassActivity.NoclassRecyclerViewAdapter.CustomViewHolder) viewHolder).time.setText(String.valueOf(thisModel.getYear())+"년 "
-                    +String.valueOf(thisModel.getMonth()) +"월 "+String.valueOf(thisModel.getDay())+"일 ");
+                    +String.valueOf(thisModel.getMonth()+1) +"월 "+String.valueOf(thisModel.getDay())+"일");
 
             ((MypageNoclassActivity.NoclassRecyclerViewAdapter.CustomViewHolder) viewHolder).lin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MypageNoclassActivity.this, EditNoclassActivity.class);
-                    intent.putExtra("whatid", thisModel.getWhatid());
+                    intent.putExtra("id", thisModel.getId());
                     intent.putExtra("name", subname);
                     startActivity(intent);
                     finish();

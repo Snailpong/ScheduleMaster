@@ -88,14 +88,14 @@ public class MypageDeadlineActivity extends AppCompatActivity {
             ((DeadRecyclerViewAdapter.CustomViewHolder) viewHolder).title.setText(thisModel.getName());
             ((DeadRecyclerViewAdapter.CustomViewHolder) viewHolder).sub.setText(subname);
             ((DeadRecyclerViewAdapter.CustomViewHolder) viewHolder).time.setText(String.valueOf(thisModel.getYear())+"년 "
-                    +String.valueOf(thisModel.getMonth()) +"월 "+String.valueOf(thisModel.getDay())+"일 "+String.format("%02d",thisModel.getHour())+
+                    +String.valueOf(thisModel.getMonth()+1) +"월 "+String.valueOf(thisModel.getDay())+"일 "+String.format("%02d",thisModel.getHour())+
                     ":"+String.format("%02d",thisModel.getMin()));
 
             ((DeadRecyclerViewAdapter.CustomViewHolder) viewHolder).lin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MypageDeadlineActivity.this, EditDeadlineActivity.class);
-                    intent.putExtra("whatid", thisModel.getWhatid());
+                    intent.putExtra("id", thisModel.getId());
                     intent.putExtra("name", subname);
                     startActivity(intent);
                     finish();

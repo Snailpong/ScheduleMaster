@@ -25,7 +25,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="과제" />
+            android:text="마감" />
 
         <ImageView
             android:id="@+id/assignmentAddBtn"
@@ -36,36 +36,10 @@
             android:src="@drawable/ic_add_black_24dp" />
     </RelativeLayout>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_dead2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:layout_marginLeft="10dp"
-                android:text="HW#9"
-                android:textSize="17sp"
-                android:textColor="#000"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="4월 20일 오후 6:00"
-                android:textSize="12sp"
-                android:textAlignment="center"/>
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="60dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -92,31 +66,11 @@
             android:layout_centerVertical="true"
             android:src="@drawable/ic_add_black_24dp" />
     </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <ListView
-            android:id="@+id/cancel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-        </ListView>
-    </ScrollView>
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_noclass2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="2월 4일 금요일"
-            android:textSize="17sp"
-            android:textColor="#000"/>
-    </LinearLayout>
+        android:layout_height="60dp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"

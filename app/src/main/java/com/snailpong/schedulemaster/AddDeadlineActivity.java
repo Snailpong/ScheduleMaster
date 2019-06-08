@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
     private LinearLayout cancelBtn;
     private TextView time;
     private TextView alarm;
+    private TextView subject;
     private EditText title;
     private StringBuilder stringBuilder;
     private Calendar calendar = Calendar.getInstance();
@@ -48,6 +50,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
         setTitle("마감 추가");
         timelayout = (LinearLayout) findViewById(R.id.deadline_timelayout);
         alarmlayout = (LinearLayout) findViewById(R.id.deadline_alarmlayout);
+        subject = (TextView) findViewById(R.id.deadline_subject);
         time = (TextView) findViewById(R.id.deadline_time);
         alarm = (TextView) findViewById(R.id.deadline_alarm);
         title = (EditText) findViewById(R.id.deadline_title);
@@ -56,6 +59,22 @@ public class AddDeadlineActivity extends AppCompatActivity {
         helper = new DBHelper(AddDeadlineActivity.this, "db.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
+
+        year = Calendar.getInstance().get(Calendar.YEAR);
+        month = Calendar.getInstance().get(Calendar.MONTH);
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        min = Calendar.getInstance().get(Calendar.MINUTE);
+
+        stringBuilder = new StringBuilder();
+        date = String.format("%d%02d%d", year, month, day);
+        stringBuilder.append(String.format("%d월 %d일 (%s) ", month, day, getDateDay(date, "yyyyMMdd")));
+        stringBuilder.append(String.format("%d시 %02d분", hour, min));
+        time.setText(stringBuilder.toString());
+
+        Cursor query = db.query("weekly", null, "_id="+String.valueOf(getIntent().getIntExtra("id", 0)), null, null, null, null);
+        query.moveToNext();
+        subject.setText(query.getString(1));
 
         timelayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +112,11 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 ContentValues values = new ContentValues();
                 values.put("name", title.getText().toString());
                 values.put("whatid", getIntent().getIntExtra("id", 0));
-                values.put("day", date);
-                values.put("endtime", timeString);
+                values.put("year", year);
+                values.put("month", month);
+                values.put("day", day);
+                values.put("hour", hour);
+                values.put("min", min);
                 values.put("prev", selectedAlarmTime[selectedAlarmItem]);
                 db.insert("deadline", null, values);
                 finish();

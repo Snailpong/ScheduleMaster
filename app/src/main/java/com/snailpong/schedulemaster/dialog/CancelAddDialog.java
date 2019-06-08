@@ -41,7 +41,9 @@ public class CancelAddDialog extends DialogFragment implements DatePickerDialog.
     public void onDateSet(DatePicker view, int year, int month, int day){
         ContentValues values = new ContentValues();
         values.put("whatid", getArguments().getInt("id"));
-        values.put("day", String.format("%d%02d%d", year, month, day));
+        values.put("year",year);
+        values.put("month",month);
+        values.put("day",day);
         db.insert("noclass", null, values);
 
     }
