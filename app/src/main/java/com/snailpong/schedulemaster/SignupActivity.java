@@ -1,5 +1,6 @@
 package com.snailpong.schedulemaster;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -40,6 +41,7 @@ public class SignupActivity extends AppCompatActivity {
     private ImageView profileImage;
     private Uri imageUri;
     private static final int PICK_FROM_ALBUM = 10;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
                     password.setBackgroundColor(Color.rgb(255, 204, 204));
                     return;
                 }
-
+                showProgress("잠시만 기다려 주십시요.");
                 FirebaseAuth.getInstance()
                         .createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
@@ -111,6 +113,7 @@ public class SignupActivity extends AppCompatActivity {
                                         FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                hideProgress();
                                                 SignupActivity.this.finish();
                                             }
                                         });
@@ -131,6 +134,7 @@ public class SignupActivity extends AppCompatActivity {
                                                 FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+                                                        hideProgress();
                                                         SignupActivity.this.finish();
                                                     }
                                                 });
@@ -141,12 +145,14 @@ public class SignupActivity extends AppCompatActivity {
                                     FirebaseAuthUserCollisionException exception =
                                             (FirebaseAuthUserCollisionException)task.getException();
                                     if (exception.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
+                                        hideProgress();
                                         Toast.makeText(getApplicationContext(), "이미 가입되어 있습니다. 가입된 계정으로 로그인해 주세요.", Toast.LENGTH_SHORT).show();
                                         email.setBackgroundColor(Color.rgb(255, 204, 204));
                                         name.setBackgroundColor(Color.TRANSPARENT);
                                         password.setBackgroundColor(Color.TRANSPARENT);
                                     }
                                 } else if (!task.isSuccessful() && task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                                    hideProgress();
                                     Toast.makeText(getApplicationContext(), "비밀번호는 6자 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
                                     email.setBackgroundColor(Color.TRANSPARENT);
                                     name.setBackgroundColor(Color.TRANSPARENT);
@@ -157,6 +163,19 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+    public void showProgress(String msg) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+        }
+
+        progressDialog.setMessage(msg);
+        progressDialog.show();
+    }
+    public void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
@@ -164,7 +183,7 @@ public class SignupActivity extends AppCompatActivity {
             imageUri = data.getData();                      // 이미지 경로
         }
     }
-    private boolean emailValid(String email) {
+    public static boolean emailValid(String email) {
         String regex = "^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(email);
