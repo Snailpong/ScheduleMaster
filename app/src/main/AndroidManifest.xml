@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +26,7 @@
         <activity android:name=".LoadingActivity" />
         <activity android:name=".CalendarRegularModifyActivity" />
         <activity android:name=".AddDeadlineActivity" />
+        <receiver android:name=".AlarmReceiver" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
