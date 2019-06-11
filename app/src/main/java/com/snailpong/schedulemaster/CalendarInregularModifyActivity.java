@@ -1,14 +1,17 @@
 package com.snailpong.schedulemaster;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,10 +25,8 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class CalendarInregularModifyActivity extends AppCompatActivity {
 
@@ -45,6 +46,11 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
 
     DBHelper helper;
     SQLiteDatabase db;
+
+    AlarmManager alarm_manager;
+    PendingIntent pendingIntent;
+    Context context;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,13 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
         helper = new DBHelper(CalendarInregularModifyActivity.this, "db.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
+
+        this.context = this;
+        // AlarmReceiver intent 생성
+        final Intent Alarm_intent = new Intent(this, AlarmReceiver.class);
+        // 알람매니저 설정
+        alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         Cursor query = db.query("daily", null, "_id="+String.valueOf(id), null, null, null, null);
 
         query.moveToNext();
@@ -82,7 +95,7 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
         endtxt.setText(query.getString(4));
         days = query.getString(2);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
+        final Calendar c = Calendar.getInstance();
 
         try {
             Date date = format.parse(days);
@@ -160,6 +173,45 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
                     values.put("y",y);
                     values.put("x",x);
                     db.update("daily",values,"_id="+String.valueOf(id),null);
+
+                    if(chkVib.isChecked()) {
+                        // 기준 시간 세팅
+                        int _id;
+                        c.set(ayear, amonth, aday, starthour, startmin, 0);
+                        // receiver에 string 값 넘겨주기
+                        Alarm_intent.putExtra("vib_state","vib on");
+                        Alarm_intent.putExtra("title", "진동 모드 on");
+                        Alarm_intent.putExtra("text", "진동 모드로 변경되었습니다.");
+                        Alarm_intent.putExtra("state", "daily");
+                        // 알람 세팅
+                        Cursor cursor = db.query("daily", null
+                                , null, null,
+                                null, null, null, null);
+                        cursor.moveToLast();
+                        // 알람 세팅, _id를 이용한 pendingIntent 식별
+                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularModifyActivity.this,
+                                1000 + 2 * _id, Alarm_intent, PendingIntent.FLAG_ONE_SHOT);
+                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+                                pendingIntent);
+                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                        //      c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+
+                        // 기준 시간 세팅
+                        c.set(ayear, amonth, aday, endhour, endmin, 0);
+                        // receiver에 string 값 넘겨주기
+                        Alarm_intent.putExtra("vib_state","vib off");
+                        Alarm_intent.putExtra("title", "진동 모드 off");
+                        Alarm_intent.putExtra("text", "진동 모드가 해제되었습니다.");
+                        Alarm_intent.putExtra("state", "daily");
+                        // 알람 세팅
+                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularModifyActivity.this,
+                                1000 + 2 * _id + 1, Alarm_intent, PendingIntent.FLAG_ONE_SHOT);
+                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+                                pendingIntent);
+                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                        //       c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                    }
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarInregularModifyActivity.this);

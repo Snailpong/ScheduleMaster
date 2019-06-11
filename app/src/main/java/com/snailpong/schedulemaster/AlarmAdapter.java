@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +67,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                 holder.img.setImageResource(R.drawable.ic_notifications_active_sky_24dp);
                 break;
         }
-        SimpleDateFormat dayTime = new SimpleDateFormat("yy-mm-dd hh:mm");
+        SimpleDateFormat dayTime = new SimpleDateFormat("yy-MM-dd hh:mm");
         holder.time.setText(dayTime.format(new Date(al.getTime())));
     }
 

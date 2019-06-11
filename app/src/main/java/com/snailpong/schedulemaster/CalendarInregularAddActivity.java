@@ -1,13 +1,17 @@
 package com.snailpong.schedulemaster;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,10 +23,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
+// 하나의 intent만 사용해볼까? 각 시간의 interval을 구
 public class CalendarInregularAddActivity extends AppCompatActivity {
 
     private int starthour, startmin, endhour, endmin, ayear, amonth, aday;
@@ -39,6 +42,10 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
     TimePickerDialog.OnTimeSetListener startTimeSetListener;
     TimePickerDialog.OnTimeSetListener endTimeSetListener;
     DatePickerDialog.OnDateSetListener dateListener;
+
+    AlarmManager alarm_manager;
+    PendingIntent pendingIntent;
+    Context context;
     double y, x;
     //DateUtils.DAY_IN_MILLIS);
 
@@ -63,7 +70,7 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
         endtxt = (TextView)findViewById(R.id.calender_add_inreg_endtime_txt);
         datetxt = (TextView) findViewById(R.id.calender_add_inreg_date_txt);
 
-        Calendar c = Calendar.getInstance();
+        final Calendar c = Calendar.getInstance();
         ayear = c.get(Calendar.YEAR);
         amonth = c.get(Calendar.MONTH);
         aday = c.get(Calendar.DAY_OF_MONTH);
@@ -73,6 +80,13 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
         helper = new DBHelper(CalendarInregularAddActivity.this, "db.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
+
+        this.context = this;
+        // AlarmReceiver intent 생성
+        final Intent intent = new Intent(this, AlarmReceiver.class);
+        // 알람매니저 설정
+        alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -129,6 +143,45 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
                     values.put("y",y);
                     values.put("x",x);
                     db.insert("daily", null, values);
+
+                    if(chkVib.isChecked()) {
+                        // 기준 시간 세팅
+                        int _id;
+                        c.set(ayear, amonth, aday, starthour, startmin, 0);
+                        // receiver에 string 값 넘겨주기
+                        intent.putExtra("vib_state","vib on");
+                        intent.putExtra("title", "진동 모드 on");
+                        intent.putExtra("text", "진동 모드로 변경되었습니다.");
+                        intent.putExtra("state", "daily");
+                        // 알람 세팅
+                        Cursor cursor = db.query("daily", null
+                                , null, null,
+                                null, null, null, null);
+                        cursor.moveToLast();
+                        // 알람 세팅, _id를 이용한 pendingIntent 식별
+                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularAddActivity.this,
+                                1000 + 2 * _id, intent, PendingIntent.FLAG_ONE_SHOT);
+                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+                                pendingIntent);
+                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                        //      c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+
+                        // 기준 시간 세팅
+                        c.set(ayear, amonth, aday, endhour, endmin, 0);
+                        // receiver에 string 값 넘겨주기
+                        intent.putExtra("vib_state","vib off");
+                        intent.putExtra("title", "진동 모드 off");
+                        intent.putExtra("text", "진동 모드가 해제되었습니다.");
+                        intent.putExtra("state", "daily");
+                        // 알람 세팅
+                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularAddActivity.this,
+                                1000 + 2 * _id + 1, intent, PendingIntent.FLAG_ONE_SHOT);
+                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+                                pendingIntent);
+                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                        //       c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                    }
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarInregularAddActivity.this);
