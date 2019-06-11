@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent">
+
+    <!-- Notice -->
+    <LinearLayout
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이름"/>
+            <EditText
+                android:id="@+id/calender_mod_reg_name"
+                android:layout_marginLeft="10dp"
+                android:gravity="right"
+                android:layout_marginBottom="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            ></LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/calender_mod_reg_starttime_lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시작"/>
+
+                <TextView
+                    android:id="@+id/calender_mod_reg_starttime_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="#000"
+                    android:text="00:00"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/calender_mod_reg_endtime_lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="10dp"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="종료"/>
+
+                <TextView
+                    android:id="@+id/calender_mod_reg_endtime_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="#000"
+                    android:text="00:00"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBox_reg_mod_Vib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="진동모드 자동 변경" />
+
+        <CheckBox
+            android:id="@+id/checkBox_reg_mod_GPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="정해진 장소에서만 모드 변경" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="반복 요일"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            >
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Mon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="월" />
+
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Tue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="화" />
+
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="수" />
+
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="목" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="금" />
+
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="토" />
+
+            <CheckBox
+                android:id="@+id/checkBox_reg_mod_Sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="일" />
+            />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Notice -->
+    <!-- 닫기 버튼 -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/dia_reg_mod_cancel"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="취소"
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/dia_reg_mod_add"
+            android:text="확인"
+            android:textSize="15sp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:theme="@style/PrimaryFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+    <!--// 닫기 버튼 -->
+</LinearLayout>
