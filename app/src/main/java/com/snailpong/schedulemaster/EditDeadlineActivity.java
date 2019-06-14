@@ -141,6 +141,8 @@ public class EditDeadlineActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 db.delete("deadline","_id="+String.valueOf(id),null);
+                db.delete("alarmset","whatid="+id,null);
+
             }
         });
     }

@@ -31,22 +31,20 @@ public class RingTonePlayingService extends Service {
         // Intent로부터 전달받은 string
         String get_state = intent.getExtras().getString("state");
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
+        // 여기에 GPS 일치 여부에 따른 진동모드 변호나 설정(조건문 처리)
         assert get_state != null;
         switch (get_state) {
             case "vib on":
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);  // 진동모드
-                Log.d("aaa", "ddd");
+                Log.d("aaa", "진동");
                 break;
             case "vib off":
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);  // 벨소리모드
-                Log.d("aaa", "eee");
+                Log.d("aaa", "꺼짐");
                 break;
             default:
                 break;
         }
-
-        stopSelf();
         return START_NOT_STICKY;
     }
 

@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AlarmFragment extends Fragment {
-    // DB에 저장된 알람 list들을 가져오기
+    // DB에 저장된 알람 list들을 가져오기(state에서 마감, 휴일만)
     private ArrayList<AlarmClass> list;
-    private String[] category_name = {"", "마감 알림", "휴일 알림", "일정 알림"};
+    private String[] category_name = {"", "마감 알림", "휴일 알림"};
     private DBHelper helper;
     private SQLiteDatabase db;
     private String subject_name;
@@ -46,102 +46,48 @@ public class AlarmFragment extends Fragment {
         db = helper.getWritableDatabase();
         helper.onCreate(db);
 
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        /* state text, name text, whatid integer, hour integer, min integer, timebefore text */
         list = new ArrayList<AlarmClass>();
-        // 마감 알림 관련 처리
-        Cursor c = db.query("alarmset", null, null, null, null, null, null);
-        c.moveToFirst();
-        category = 1;
-        /*
-        while(deadline_c.moveToNext()) {
-            int id = deadline_c.getInt(deadline_c.getColumnIndex("_id"));
-            String name = deadline_c.getString(deadline_c.getColumnIndex("name"));
-            int whatid = deadline_c.getInt(deadline_c.getColumnIndex("whatid"));
-            int year = deadline_c.getInt(deadline_c.getColumnIndex("year"));
-            int month = deadline_c.getInt(deadline_c.getColumnIndex("month"));
-            int day = deadline_c.getInt(deadline_c.getColumnIndex("day"));
-            int hour = deadline_c.getInt(deadline_c.getColumnIndex("hour"));
-            int min = deadline_c.getInt(deadline_c.getColumnIndex("min"));
-            int prev = deadline_c.getInt(deadline_c.getColumnIndex("prev"));
-            long time;
+        // 알람 관련 처리
+        Cursor c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
+        while(c.moveToNext()) {
+            String state = c.getString(c.getColumnIndex("state"));
+            int whatid = c.getInt(c.getColumnIndex("whatid"));
+            int hour = c.getInt(c.getColumnIndex("hour"));
+            int min = c.getInt(c.getColumnIndex("min"));
+            long timebefore = c.getLong(c.getColumnIndex("timebefore"));
 
-            calendar.set(year, month, day, hour, min, 0);
-            calendar.add(calendar.HOUR_OF_DAY, -prev);
-            String title = category_name[category];
-
-            findSubjectName(whatid);
-
+            // id를 사용해 과목명 불러오기
+            Cursor cursor = db.query("weekly", null
+                    , "_id="+String.valueOf(whatid), null,
+                    null, null, null, null);
+            c.moveToFirst();
+            // 과목명
+            subject_name = c.getString(c.getColumnIndex("name"));
             timeString = String.format("%02d:%02d", hour, min);
-            content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
-                    + " " + subject_name + " " + name + " 마감입니다.";
+            // 마감처리
+            if (state == "deadline") {
+                category = 1;
+                content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
+                        + " " + subject_name + " " + c.getInt(c.getColumnIndex("name"))
+                        + " " + "마감입니다.";
+            }
+            // 휴강처리
+            else {
+                category = 2;
+                content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
+                        + " " + subject_name + " " + " 휴강입니다.";
+            }
 
-            time = calendar.getTimeInMillis();
-
-            list.add(new AlarmClass(id, category, title, content, time));
+            list.add(new AlarmClass(whatid, category, category_name[category], content, timebefore));
         }
-
-        // 휴일 알림 관련 처리
-        Cursor noclass_c = db.query("noclass", null, null, null, null, null, null);
-        //noclass_c.moveToFirst();
-        category = 2;
-
-        while(noclass_c.moveToNext()) {
-            int id = noclass_c.getInt(deadline_c.getColumnIndex("_id"));
-            int whatid = noclass_c.getInt(deadline_c.getColumnIndex("whatid"));
-            int year = noclass_c.getInt(deadline_c.getColumnIndex("year"));
-            int month = noclass_c.getInt(deadline_c.getColumnIndex("month"));
-            int day = noclass_c.getInt(deadline_c.getColumnIndex("day"));
-            long time;
-
-            String title = category_name[category];
-            findSubjectName(whatid);
-
-            content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
-                    + " " + subject_name + " " + " 휴강입니다.";
-
-            calendar.set(year, month, day, 0, 0, 0);
-            time = calendar.getTimeInMillis();
-
-            list.add(new AlarmClass(id, category, title, content, time));
-        }*/
-        // for Test;
-        /*
-        list.add(new AlarmClass(1,1,"마감 알림", "4월 23일 23:59 컴퓨터알고리즘 HW#9 마감입니다.", 1490958393191L));
-        list.add(new AlarmClass(2,2,"휴일 알림", "4월 25일 운영체제 휴강입니다.", 1490358393191L));
-        list.add(new AlarmClass(3,3,"일정 알림", "4월 26일 17:00 꼬부기 약속입니다.", 1490158393191L));
-        */
-
-        // 일정 알림 관련 처리
-        /*
-        Cursor daily_c = db.query("daily", null, null, null, null, null, null);
-        daily_c.moveToFirst();
-        category = 3;
-        while(daily_c.moveToNext()) {
-            int year, month, day;
-            String name = deadline_c.getString(daily_c.getColumnIndex("name"));
-            String days = deadline_c.getString(daily_c.getColumnIndex("days"));
-            int starttime = deadline_c.getInt(daily_c.getColumnIndex("starttime"));
-            int endtime = deadline_c.getInt(daily_c.getColumnIndex("endtime"));
-            long time;
-
-            String title = category_name[category];
-
-            list.add(new AlarmClass(id, category, title, content, time));
-        }
-        */
 
         AlarmAdapter adapter = new AlarmAdapter(list) ;
-        recyclerView.setAdapter(adapter) ;
+        recyclerView.setAdapter(adapter);
         return view;
     }
-
-    public void findSubjectName (int id) {
-        // id를 사용해 과목명 불러오기 (함수처리)
-        Cursor c = db.query("weekly", null
-                , "_id=" + String.valueOf(id), null,
-                null, null, null, null);
-        c.moveToFirst();
-
-        subject_name = c.getString(c.getColumnIndex("name"));
-    }
-
 }

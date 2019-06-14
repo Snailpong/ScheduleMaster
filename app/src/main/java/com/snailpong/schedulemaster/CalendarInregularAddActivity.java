@@ -143,46 +143,8 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
                     values.put("y",y);
                     values.put("x",x);
                     db.insert("daily", null, values);
-
-                    if(chkVib.isChecked()) {
-                        // 기준 시간 세팅
-                        int _id;
-                        c.set(ayear, amonth, aday, starthour, startmin, 0);
-                        // receiver에 string 값 넘겨주기
-                        intent.putExtra("vib_state","vib on");
-                        intent.putExtra("title", "진동 모드 on");
-                        intent.putExtra("text", "진동 모드로 변경되었습니다.");
-                        intent.putExtra("state", "daily");
-                        // 알람 세팅
-                        Cursor cursor = db.query("daily", null
-                                , null, null,
-                                null, null, null, null);
-                        cursor.moveToLast();
-                        // 알람 세팅, _id를 이용한 pendingIntent 식별
-                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
-                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularAddActivity.this,
-                                1000 + 2 * _id, intent, PendingIntent.FLAG_ONE_SHOT);
-                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-                                pendingIntent);
-                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
-                        //      c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-
-                        // 기준 시간 세팅
-                        c.set(ayear, amonth, aday, endhour, endmin, 0);
-                        // receiver에 string 값 넘겨주기
-                        intent.putExtra("vib_state","vib off");
-                        intent.putExtra("title", "진동 모드 off");
-                        intent.putExtra("text", "진동 모드가 해제되었습니다.");
-                        intent.putExtra("state", "daily");
-                        // 알람 세팅
-                        pendingIntent = PendingIntent.getBroadcast(CalendarInregularAddActivity.this,
-                                1000 + 2 * _id + 1, intent, PendingIntent.FLAG_ONE_SHOT);
-                        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-                                pendingIntent);
-                        //alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
-                        //       c.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-                    }
                     finish();
+
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarInregularAddActivity.this);
                     //builder.setTitle("오류");

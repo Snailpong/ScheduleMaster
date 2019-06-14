@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
-
+// 마감 추가시 deadline DB에 넣고, 알람세팅
 public class AddDeadlineActivity extends AppCompatActivity {
     private int year, month, day, hour, min;
     private LinearLayout timelayout;
@@ -174,6 +174,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 // receiver에 string 값 넘겨주기
                 my_intent.putExtra("title", "마감 알림");
                 my_intent.putExtra("text", text);
+                my_intent.putExtra("timestring", timeString);
 
                 // pendingintent 식별을 위한 db 쿼리
                 Cursor c = db.query("deadline", null
@@ -181,7 +182,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
                         null, null, null, null);
                 c.moveToLast();
                 // 알람 세팅, _id를 이용한 pendingIntent 식별
-                pendingIntent = PendingIntent.getBroadcast(AddDeadlineActivity.this, 3000 + c.getInt(c.getColumnIndex("_id")),
+                pendingIntent = PendingIntent.getBroadcast(AddDeadlineActivity.this, 1000 + c.getInt(c.getColumnIndex("_id")),
                         my_intent, 0);
                 alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         pendingIntent);

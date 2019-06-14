@@ -1,9 +1,13 @@
 package com.snailpong.schedulemaster.dialog;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,14 +17,17 @@ import android.widget.Toast;
 
 import com.snailpong.schedulemaster.AddDeadlineActivity;
 import com.snailpong.schedulemaster.DBHelper;
+import com.snailpong.schedulemaster.NotificationReceiver;
 import com.snailpong.schedulemaster.R;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class CancelAddDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+import static android.content.Context.ALARM_SERVICE;
 
+public class CancelAddDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    // noclass DB에 추가하는 역할
     private DBHelper helper;
     private SQLiteDatabase db;
 
@@ -45,6 +52,5 @@ public class CancelAddDialog extends DialogFragment implements DatePickerDialog.
         values.put("month",month);
         values.put("day",day);
         db.insert("noclass", null, values);
-
     }
 }

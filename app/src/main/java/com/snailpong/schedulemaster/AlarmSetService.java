@@ -1,5 +1,5 @@
 package com.snailpong.schedulemaster;
-
+// 정기, 비정기 일정을 넣고 휴일과 비교해서 setting, 휴일의 경우는 0시에 noti 울리기
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -59,12 +59,12 @@ public class AlarmSetService extends Service {
         final Intent my_intent = new Intent(this, RingTonePlayingReceiver.class);
 
         // (1) 정기 일정 넣기
-
-        c = db.rawQuery("SELECT * FROM weekly", null);
+        c = db.rawQuery("SELECT * FROM weekly WHERE vib='" + 1 + "';", null);
         while (c.moveToNext()) {
             int day = c.getInt(c.getColumnIndex("day")) & mask[dayOfWeek];
             if (day != 0) {
                 // DB에 넣기
+                Log.d("Alarmsetservice", "정기일정 처리");
                 AddCalendarDB(c, "vib on", "starttime");
                 AddCalendarDB(c, "vib off", "endtime");
             }
@@ -96,12 +96,12 @@ public class AlarmSetService extends Service {
 
         while (c.moveToNext()) {
             String state = c.getString(c.getColumnIndex("state"));
-            ;
+
             int hour = c.getInt(c.getColumnIndex("hour"));
             int min = c.getInt(c.getColumnIndex("min"));
 
             calendar.set(year, month, day, hour, min, 0);
-
+            Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
             my_intent.putExtra("state", state);
             pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
                     my_intent, PendingIntent.FLAG_ONE_SHOT);
@@ -109,20 +109,19 @@ public class AlarmSetService extends Service {
                     pendingIntent);
         }
         Log.d("Alarmsetservice", "on startcommand() 호출");
-        stopSelf();
         return START_NOT_STICKY;
     }
 
     private void AddCalendarDB (Cursor c, String state, String columnName) {
         ContentValues values = new ContentValues();
         String[] HourMin = (c.getString(c.getColumnIndex(columnName))).split(":");
+        //Log.d("state", state);
         values.put("state", state);
         values.put("name", c.getString(c.getColumnIndex("name")));
         values.put("hour", Integer.valueOf(HourMin[0]));
         values.put("min", Integer.valueOf(HourMin[1]));
         db.insert("alarmset", null, values);
     }
-
 
     @Override
     public void onDestroy() {
