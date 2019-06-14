@@ -82,7 +82,7 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
 
         this.context = this;
         // AlarmReceiver intent 생성
-        final Intent Alarm_intent = new Intent(this, AlarmReceiver.class);
+        final Intent Alarm_intent = new Intent(this, NotificationReceiver.class);
         // 알람매니저 설정
         alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

@@ -1,5 +1,8 @@
 package com.snailpong.schedulemaster;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +20,8 @@ import com.snailpong.schedulemaster.fragment.FriendFragment;
 import com.snailpong.schedulemaster.fragment.MypageFragment;
 import com.snailpong.schedulemaster.fragment.SettingFragment;
 
+import java.util.Calendar;
+
 public class TabbedActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
@@ -25,11 +30,28 @@ public class TabbedActivity extends AppCompatActivity {
     private Fragment menu3Fragment;
     private Fragment menu4Fragment = new SettingFragment();
     private FragmentTransaction transaction;
+    // test
+    private PendingIntent pendingIntent;
+    private AlarmManager alarm_manager;
+    private Calendar calendar = Calendar.getInstance();
+
+    public TabbedActivity() {
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
+
+        // test
+        final Intent my_intent = new Intent(this, AlarmSetReceiver.class);
+        alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        pendingIntent = PendingIntent.getBroadcast(TabbedActivity.this, 7000,
+                my_intent, 0);
+        alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         // 첫 화면 지정

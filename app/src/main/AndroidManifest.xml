@@ -26,7 +26,9 @@
         <activity android:name=".LoadingActivity" />
         <activity android:name=".CalendarRegularModifyActivity" />
         <activity android:name=".AddDeadlineActivity" />
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".AlarmSetReceiver" />
+        <receiver android:name=".NotificationReceiver" />
+        <receiver android:name=".RingTonePlayingReceiver" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -63,6 +65,12 @@
         </activity>
         <service
             android:name=".RingTonePlayingService"
+            android:enabled="true"></service>
+        <service
+            android:name=".AlarmSetService"
+            android:enabled="true"></service>
+        <service
+            android:name=".NotificationService"
             android:enabled="true"></service>
     </application>
 

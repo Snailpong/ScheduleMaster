@@ -14,10 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class RingTonePlayingService extends Service {
-    //MediaPlayer mediaPlayer;
-    //int startId;
-    //boolean isRunning;
-    //Context context;
 
     @Nullable
     @Override
@@ -33,71 +29,24 @@ public class RingTonePlayingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Intent로부터 전달받은 string
-        String get_vib_State = intent.getExtras().getString("vib_state");
-        String getTitle = intent.getExtras().getString("title");
-        String getText = intent.getExtras().getString("text");
-
+        String get_state = intent.getExtras().getString("state");
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            String CHANNEL_ID = "default";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "Channel human readable title",
-                    // 알람 중요도 설정 (HIGH, DEFULAT ...)
-                    NotificationManager.IMPORTANCE_HIGH);
-
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-            // 알림 빌더 생성
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    // 알림 속성 설정
-                    .setContentTitle(getTitle)
-                    .setContentText(getText)
-                    .setSmallIcon(R.mipmap.ic_launcher) // 아이콘 수정 필요
-                    .build();
-            // 서비스 시작
-            startForeground(1, notification);
-        }
-
-        assert get_vib_State != null;
-        switch (get_vib_State) {
+        assert get_state != null;
+        switch (get_state) {
             case "vib on":
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);  //진동
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);  // 진동모드
+                Log.d("aaa", "ddd");
                 break;
             case "vib off":
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);  //벨
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);  // 벨소리모드
+                Log.d("aaa", "eee");
                 break;
             default:
                 break;
         }
-        /*
-        // 알람음 재생 X , 알람음 시작 클릭
-        if(!this.isRunning && startId == 1) {
-            this.isRunning = true;
-            this.startId = 0;
-        }
 
-        // 알람음 재생 O , 알람음 종료 버튼 클릭
-        else if(this.isRunning && startId == 0) {
-            this.isRunning = false;
-            this.startId = 0;
-        }
-
-        // 알람음 재생 X , 알람음 종료 버튼 클릭
-        else if(!this.isRunning && startId == 0) {
-            this.isRunning = false;
-            this.startId = 0;
-
-        }
-
-        // 알람음 재생 O , 알람음 시작 버튼 클릭
-        else if(this.isRunning && startId == 1){
-            this.isRunning = true;
-            this.startId = 1;
-        }
-
-        else {
-        }
-        */
+        stopSelf();
         return START_NOT_STICKY;
     }
 
@@ -105,8 +54,6 @@ public class RingTonePlayingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //mediaPlayer.stop();
-        Log.d("onDestory() 실행", "서비스 파괴");
-
+        // Log.d("onDestory() 실행", "서비스 파괴");
     }
 }

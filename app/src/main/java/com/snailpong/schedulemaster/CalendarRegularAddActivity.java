@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +45,7 @@ public class CalendarRegularAddActivity extends AppCompatActivity {
     PendingIntent pendingIntent;
     Context context;
     String text;
+    boolean[] ischecked = new boolean[7];
 
     final Calendar calendar = Calendar.getInstance();
     int year, month, day, hour, minute;
@@ -84,7 +86,7 @@ public class CalendarRegularAddActivity extends AppCompatActivity {
 
         this.context = this;
         // AlarmReceiver intent 생성
-        final Intent my_intent = new Intent(this, AlarmReceiver.class);
+        final Intent Alarm_intent = new Intent(this, NotificationReceiver.class);
         // 알람매니저 설정
         alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -115,39 +117,57 @@ public class CalendarRegularAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int day = 0;
-                for(int i=0; i!=7; i++)
-                    if(chkArray.get(i).isChecked()) day += (1 << i);
+                for(int i=0; i!=7; i++) {
+                    // ischecked : 0 ~ 6
+                    if (chkArray.get(i).isChecked()) {
+                        day += (1 << i); // bit, 일토금목수화월
+                        ischecked[i] = true;
+                    }
+
+                    else {
+                        ischecked[i] = false;
+                    }
+                }
 
                 if(day != 0 && starttxt.getText().toString() != endtxt.getText().toString() && name.getText().toString().length() > 1) {
                     helper.addRegular(db, name.getText().toString(), day, starttxt.getText().toString(), endtxt.getText().toString(), chkVib.isChecked(), chkGPS.isChecked(), y, x);
-/*
+
                     if(chkVib.isChecked()) {
                         // 기준 시간 세팅
-                        c.set(ayear, amonth, aday, starthour, startmin, 0);g
-                        text = "진동 모드로 변경되었습니다.";
+                        int _id;
+                        calendar.set(year, month, day, starthour, startmin, 0);
                         // receiver에 string 값 넘겨주기
-                        my_intent.putExtra("state","alarm on");
-                        my_intent.putExtra("category_name", "진동 모드 on");
-                        my_intent.putExtra("text", text);
+                        Alarm_intent.putExtra("vib_state","vib on");
+                        Alarm_intent.putExtra("title", "진동 모드 on");
+                        Alarm_intent.putExtra("text", "진동 모드로 변경되었습니다.");
+                        Alarm_intent.putExtra("state", "weekly");
+                        Alarm_intent.putExtra("dayOfTheWeek", ischecked);
                         // 알람 세팅
-                        pendingIntent = PendingIntent.getBroadcast(CalendarRegularAddActivity.this, 0, my_intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                        Cursor cursor = db.query("weekly", null
+                                , null, null,
+                                null, null, null, null);
+                        cursor.moveToLast();
+                        // 알람 세팅, _id를 이용한 pendingIntent 식별
+                        _id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        pendingIntent = PendingIntent.getBroadcast(CalendarRegularAddActivity.this,
+                                2000 + 2 * _id, Alarm_intent, PendingIntent.FLAG_ONE_SHOT);
                         alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
-                              calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                              calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pendingIntent);
 
-                        calendar.set(ayear, amonth, aday, starthour, startmin, 0);
-                        text = "진동 모드가 해제되었습니다.";
+                        // 기준 시간 세팅
+                        calendar.set(year, month, day, endhour, endmin, 0);
                         // receiver에 string 값 넘겨주기
-                        my_intent.putExtra("state","alarm on");
-                        my_intent.putExtra("category_name", "진동 모드 off");
-                        my_intent.putExtra("text", text);
+                        Alarm_intent.putExtra("vib_state","vib off");
+                        Alarm_intent.putExtra("title", "진동 모드 off");
+                        Alarm_intent.putExtra("text", "진동 모드가 해제되었습니다.");
+                        Alarm_intent.putExtra("state", "weekly");
+                        Alarm_intent.putExtra("dayOfTheWeek", ischecked);
                         // 알람 세팅
-                        pendingIntent = PendingIntent.getBroadcast(CalendarRegularAddActivity.this, 1, my_intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                        pendingIntent = PendingIntent.getBroadcast(CalendarRegularAddActivity.this,
+                                2000 + 2 * _id + 1, Alarm_intent, PendingIntent.FLAG_ONE_SHOT);
                         alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP,
-                               calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                                calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pendingIntent);
                     }
-*/
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarRegularAddActivity.this);

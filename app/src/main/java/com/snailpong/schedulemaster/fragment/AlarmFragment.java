@@ -48,10 +48,10 @@ public class AlarmFragment extends Fragment {
 
         list = new ArrayList<AlarmClass>();
         // 마감 알림 관련 처리
-        Cursor deadline_c = db.query("deadline", null, null, null, null, null, null);
-        //deadline_c.moveToFirst();
+        Cursor c = db.query("alarmset", null, null, null, null, null, null);
+        c.moveToFirst();
         category = 1;
-
+        /*
         while(deadline_c.moveToNext()) {
             int id = deadline_c.getInt(deadline_c.getColumnIndex("_id"));
             String name = deadline_c.getString(deadline_c.getColumnIndex("name"));
@@ -78,6 +78,7 @@ public class AlarmFragment extends Fragment {
 
             list.add(new AlarmClass(id, category, title, content, time));
         }
+
         // 휴일 알림 관련 처리
         Cursor noclass_c = db.query("noclass", null, null, null, null, null, null);
         //noclass_c.moveToFirst();
@@ -101,7 +102,7 @@ public class AlarmFragment extends Fragment {
             time = calendar.getTimeInMillis();
 
             list.add(new AlarmClass(id, category, title, content, time));
-        }
+        }*/
         // for Test;
         /*
         list.add(new AlarmClass(1,1,"마감 알림", "4월 23일 23:59 컴퓨터알고리즘 HW#9 마감입니다.", 1490958393191L));

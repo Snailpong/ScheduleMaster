@@ -82,7 +82,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
 
         this.context = this;
         // AlarmReceiver intent 설정
-        final Intent my_intent = new Intent(this, AlarmReceiver.class);
+        final Intent my_intent = new Intent(this, NotificationReceiver.class);
         // 알람매니저 설정
         alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -147,8 +147,9 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 if(deadline_name.length() > 1) {
                     values.put("name", deadline_name);
                 }
-                else
+                else {
                     values.put("name", "HW");
+                }
                 values.put("whatid", currentid);
                 values.put("year", year);
                 values.put("month", month);
@@ -171,7 +172,6 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 text = (month + 1) + "월 " + day + "일 " + timeString + " " + subject_name + " " + deadline_name + " 마감입니다.";
 
                 // receiver에 string 값 넘겨주기
-                my_intent.putExtra("state","deadline");
                 my_intent.putExtra("title", "마감 알림");
                 my_intent.putExtra("text", text);
 
@@ -181,7 +181,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
                         null, null, null, null);
                 c.moveToLast();
                 // 알람 세팅, _id를 이용한 pendingIntent 식별
-                pendingIntent = PendingIntent.getBroadcast(AddDeadlineActivity.this, c.getInt(c.getColumnIndex("_id")),
+                pendingIntent = PendingIntent.getBroadcast(AddDeadlineActivity.this, 3000 + c.getInt(c.getColumnIndex("_id")),
                         my_intent, 0);
                 alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         pendingIntent);
