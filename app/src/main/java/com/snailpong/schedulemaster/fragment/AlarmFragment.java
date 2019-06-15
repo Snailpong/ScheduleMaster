@@ -17,7 +17,7 @@ import com.snailpong.schedulemaster.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
+// ok
 public class AlarmFragment extends Fragment {
     // DB에 저장된 알람 list들을 가져오기(state에서 마감, 휴일만)
     private ArrayList<AlarmClass> list;
@@ -49,17 +49,17 @@ public class AlarmFragment extends Fragment {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-
+        int whatid, hour, min, prev;
+        long timebefore;
         /* state text, name text, whatid integer, hour integer, min integer, timebefore text */
         list = new ArrayList<AlarmClass>();
         // 알람 관련 처리
         Cursor c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
         while(c.moveToNext()) {
             String state = c.getString(c.getColumnIndex("state"));
-            int whatid = c.getInt(c.getColumnIndex("whatid"));
-            int hour = c.getInt(c.getColumnIndex("hour"));
-            int min = c.getInt(c.getColumnIndex("min"));
-            long timebefore = c.getLong(c.getColumnIndex("timebefore"));
+            whatid = c.getInt(c.getColumnIndex("whatid"));
+            hour = c.getInt(c.getColumnIndex("hour"));
+            min = c.getInt(c.getColumnIndex("min"));
 
             // id를 사용해 과목명 불러오기
             Cursor cursor = db.query("weekly", null
@@ -72,6 +72,16 @@ public class AlarmFragment extends Fragment {
             // 마감처리
             if (state == "deadline") {
                 category = 1;
+                // 알람 날짜와 마감 날짜가 다를 수도 있으므로
+                year = c.getInt(c.getColumnIndex("year"));
+                month = c.getInt(c.getColumnIndex("month"));
+                day = c.getInt(c.getColumnIndex("day"));
+                prev = c.getInt(c.getColumnIndex("prev"));
+
+                calendar.set(year, month, day, hour, min, 0);
+                calendar.add(calendar.HOUR_OF_DAY, -prev);
+                timebefore = calendar.getTimeInMillis();
+
                 content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
                         + " " + subject_name + " " + c.getInt(c.getColumnIndex("name"))
                         + " " + "마감입니다.";
@@ -79,6 +89,8 @@ public class AlarmFragment extends Fragment {
             // 휴강처리
             else {
                 category = 2;
+                calendar.set(year, month, day, 0, 0);
+                timebefore = calendar.getTimeInMillis();
                 content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
                         + " " + subject_name + " " + " 휴강입니다.";
             }
@@ -88,6 +100,7 @@ public class AlarmFragment extends Fragment {
 
         AlarmAdapter adapter = new AlarmAdapter(list) ;
         recyclerView.setAdapter(adapter);
+        db.close();
         return view;
     }
 }

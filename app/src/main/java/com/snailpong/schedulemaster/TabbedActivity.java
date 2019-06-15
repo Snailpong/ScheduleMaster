@@ -33,10 +33,6 @@ public class TabbedActivity extends AppCompatActivity {
     private Fragment menu3Fragment;
     private Fragment menu4Fragment = new SettingFragment();
     private FragmentTransaction transaction;
-    // test
-    private PendingIntent pendingIntent;
-    private AlarmManager alarm_manager;
-    private Calendar calendar = Calendar.getInstance();
 
     public TabbedActivity() {
     }
@@ -59,14 +55,6 @@ public class TabbedActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
-
-        // test
-        final Intent my_intent = new Intent(this, AlarmSetReceiver.class);
-        alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        pendingIntent = PendingIntent.getBroadcast(TabbedActivity.this, 7000,
-                my_intent, 0);
-        alarm_manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);

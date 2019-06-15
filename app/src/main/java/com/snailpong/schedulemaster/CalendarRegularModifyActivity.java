@@ -139,6 +139,8 @@ public class CalendarRegularModifyActivity extends AppCompatActivity {
                     values.put("y",y);
                     values.put("x",x);
                     db.update("weekly",values,"_id="+String.valueOf(id),null);
+                    final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
+                    startService(service_intent);
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarRegularModifyActivity.this);

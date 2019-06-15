@@ -1,6 +1,8 @@
 package com.snailpong.schedulemaster;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -44,6 +46,8 @@ public class EditDeadlineActivity extends AppCompatActivity {
     private DBHelper helper;
     private SQLiteDatabase db;
     private int id;
+    private PendingIntent pendingintent;
+    private AlarmManager alarm_manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,8 @@ public class EditDeadlineActivity extends AppCompatActivity {
                 values.put("min", min);
                 values.put("prev", selectedAlarmTime[selectedAlarmItem]);
                 db.update("deadline", values, "_id="+String.valueOf(id),null);
+                final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
+                startService(service_intent);
                 finish();
             }
         });
@@ -140,8 +146,17 @@ public class EditDeadlineActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // deadline의 db제거 및 알람 제거
+                Cursor cursor = db.rawQuery("SELECT * FROM deadline WHERE whatid='" + id + "';", null);
+                cursor.moveToFirst();
+                while(cursor.moveToNext()) {
+                    final Intent my_intent = new Intent(EditDeadlineActivity.this, NotificationReceiver.class);
+                    alarm_manager = (AlarmManager) EditDeadlineActivity.this.getSystemService(ALARM_SERVICE);
+                    pendingintent = PendingIntent.getBroadcast(EditDeadlineActivity.this
+                            , 1000 + cursor.getColumnIndex("_id"), my_intent, 0);
+                    alarm_manager.cancel(pendingintent);
+                }
                 db.delete("deadline","_id="+String.valueOf(id),null);
-                db.delete("alarmset","whatid="+id,null);
 
             }
         });

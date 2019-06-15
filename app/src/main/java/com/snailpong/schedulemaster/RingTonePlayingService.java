@@ -36,15 +36,18 @@ public class RingTonePlayingService extends Service {
         switch (get_state) {
             case "vib on":
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);  // 진동모드
-                Log.d("aaa", "진동");
+                //Log.d("aaa", "진동");
                 break;
             case "vib off":
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);  // 벨소리모드
-                Log.d("aaa", "꺼짐");
+                //Log.d("aaa", "꺼짐");
                 break;
             default:
                 break;
         }
+
+
+
         return START_NOT_STICKY;
     }
 

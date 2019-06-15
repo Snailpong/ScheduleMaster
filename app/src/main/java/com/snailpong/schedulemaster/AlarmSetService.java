@@ -21,7 +21,7 @@ public class AlarmSetService extends Service {
     private Calendar calendar = Calendar.getInstance();
     private Cursor c;
     private AlarmManager alarm_manager;
-    int year, month, day, dayOfWeek;
+    private int year, month, day, dayOfWeek, hour, min;
     // weekly DB table의 day와 calendar의 DAY_OF_WEEK 비교용
     int[] mask = {0, 0b1000000, 0b0000001, 0b0000010, 0b0000100, 0b0001000, 0b0010000, 0b0100000};
     String days;
@@ -39,6 +39,14 @@ public class AlarmSetService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        /*
+            tag = 0: 0시 setting
+            tag = 1: regular add, update
+            tag = 2: inregular add, update
+            tag = 3: deadline add, update
+            tag = 4: noclass add, update
+        */
+        //int get_your_tag = intent.getExtras().getInt("tag");
 
         helper = new DBHelper(this, "db.db", null, 1);
         db = helper.getWritableDatabase();
@@ -52,64 +60,122 @@ public class AlarmSetService extends Service {
 
         // 알람매니저 설정
         alarm_manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        // 전 날의 db 초기화
-        db.execSQL("delete from " + "alarmset");
+        db.delete("alarmset",  "state=?", new String[]{"vib on"});
+        db.delete("alarmset",  "state=?", new String[]{"vib off"});
 
         // AlarmReceiver intent 설정
-        final Intent my_intent = new Intent(this, RingTonePlayingReceiver.class);
+        final Intent dialog_intent = new Intent(this, RingTonePlayingReceiver.class);
+        final Intent notification_intent = new Intent(this, NotificationReceiver.class);
 
-        // (1) 정기 일정 넣기
-        c = db.rawQuery("SELECT * FROM weekly WHERE vib='" + 1 + "';", null);
+        insertRegular();
+        insertInregular();
+        insertNoclass();
+        insertDeadline();
+
+        // 일정을 알람매니저에 넣기
+        c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "vib on" + "' OR state='" + "vib off" + "';", null);
+        c.moveToFirst();
         while (c.moveToNext()) {
-            int day = c.getInt(c.getColumnIndex("day")) & mask[dayOfWeek];
-            if (day != 0) {
-                // DB에 넣기
-                Log.d("Alarmsetservice", "정기일정 처리");
-                AddCalendarDB(c, "vib on", "starttime");
-                AddCalendarDB(c, "vib off", "endtime");
-            }
+            String state = c.getString(c.getColumnIndex("state"));
+
+            hour = c.getInt(c.getColumnIndex("hour"));
+            min = c.getInt(c.getColumnIndex("min"));
+
+            calendar.set(year, month, day, hour, min, 0);
+            //Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
+            dialog_intent.putExtra("state", state);
+            pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
+                    dialog_intent, PendingIntent.FLAG_ONE_SHOT);
+            alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    pendingIntent);
         }
-
-        // (1) 정기 일정 넣기 -- 수정(deadline, noclass 일정 넣기임)
         /*
-        c = db.rawQuery("SELECT * FROM weekly WHERE year='" + year + "' AND month='" + month + "';", null);
+        // 마강, 휴일을 알람매니저에 넣기
+        c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
+        c.moveToFirst();
         while (c.moveToNext()) {
-            int day = c.getInt(c.getColumnIndex("day")) & mask[dayOfWeek];
-            if (day != 0) {
-                // DB에 넣기
-                AddCalendarDB(c, "vib on", "starttime");
-                AddCalendarDB(c, "vib off", "endtime");
-            }
+            String state = c.getString(c.getColumnIndex("state"));
+
+            hour = c.getInt(c.getColumnIndex("hour"));
+            min = c.getInt(c.getColumnIndex("min"));
+
+            calendar.set(year, month, day, hour, min, 0);
+            //Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
+            notification_intent.putExtra("state", state);
+            pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
+                    notification_intent, PendingIntent.FLAG_ONE_SHOT);
+            alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    pendingIntent);
         }
         */
-        // (2) 비정기 일정 넣기
+        Log.d("Alarmsetservice", "on startcommand() 호출");
+        return START_NOT_STICKY;
+    }
+    private void insertRegular() {
+        c = db.rawQuery("SELECT * FROM weekly WHERE vib='" + 1 + "';", null);
+        c.moveToFirst();
+        while (c.moveToNext()) {
+            int day = c.getInt(c.getColumnIndex("day")) & mask[dayOfWeek];
+            if (day != 0) {
+                // DB에 넣기
+                //Log.d("Alarmsetservice", "정기일정 처리");
+                AddCalendarDB(c, "vib on", "starttime");
+                AddCalendarDB(c, "vib off", "endtime");
+            }
+        }
+    }
+
+    private void insertInregular() {
         c = db.rawQuery("SELECT * FROM daily WHERE day='" + days + "';", null);
+        c.moveToFirst();
         while (c.moveToNext()) {
             // DB에 넣기
             AddCalendarDB(c, "vib on", "starttime");
             AddCalendarDB(c, "vib off", "endtime");
         }
+    }
 
-        // (3) 일정을 알람매니저에 넣기
-        c = db.query("alarmset", null, null, null, null, null, null);
+    private void insertNoclass() {
+        c = db.rawQuery("SELECT * FROM noclass WHERE year='" + year + "' AND month='" + month + "' "
+                + "AND day='" + day + "';", null);
         c.moveToFirst();
-
         while (c.moveToNext()) {
-            String state = c.getString(c.getColumnIndex("state"));
+            // DB에 넣기
+            ContentValues values = new ContentValues();
+            values.put("state", "noclass");
+            values.put("whatid", c.getInt(c.getColumnIndex("whatid")));
+            values.put("hour", 0);
+            values.put("min", 0);
 
-            int hour = c.getInt(c.getColumnIndex("hour"));
-            int min = c.getInt(c.getColumnIndex("min"));
-
-            calendar.set(year, month, day, hour, min, 0);
-            Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
-            my_intent.putExtra("state", state);
-            pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
-                    my_intent, PendingIntent.FLAG_ONE_SHOT);
-            alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    pendingIntent);
+            db.insert("alarmset", null, values);
         }
-        Log.d("Alarmsetservice", "on startcommand() 호출");
-        return START_NOT_STICKY;
+    }
+
+    private void insertDeadline() {
+        c = db.rawQuery("SELECT * FROM deadline", null);
+        c.moveToFirst();
+        while (c.moveToNext()) {
+            // DB에 넣기
+            int _year = c.getInt(c.getColumnIndex("year"));
+            int _month = c.getInt(c.getColumnIndex("month"));
+            int _day = c.getInt(c.getColumnIndex("day"));
+            int _hour = c.getInt(c.getColumnIndex("hour"));
+            int _min = c.getInt(c.getColumnIndex("min"));
+            int _prev = c.getInt(c.getColumnIndex("prev"));
+
+            calendar.set(_year, _month, _day, _hour, _min);
+            calendar.add(calendar.HOUR_OF_DAY, -_prev);
+
+            if (year == _year && month == _month && day == _day) {
+                ContentValues values = new ContentValues();
+                values.put("state", "deadline");
+                values.put("whatid", c.getInt(c.getColumnIndex("whatid")));
+                values.put("hour", c.getInt(c.getColumnIndex("hour")));
+                values.put("min", c.getInt(c.getColumnIndex("min")));
+
+                db.insert("alarmset", null, values);
+            }
+        }
     }
 
     private void AddCalendarDB (Cursor c, String state, String columnName) {

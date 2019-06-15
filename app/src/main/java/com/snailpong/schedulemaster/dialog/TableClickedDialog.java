@@ -1,5 +1,7 @@
 package com.snailpong.schedulemaster.dialog;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,12 +32,16 @@ import com.snailpong.schedulemaster.LoadingActivity;
 import com.snailpong.schedulemaster.MemoActivity;
 import com.snailpong.schedulemaster.MypageDeadlineActivity;
 import com.snailpong.schedulemaster.MypageNoclassActivity;
+import com.snailpong.schedulemaster.NotificationReceiver;
 import com.snailpong.schedulemaster.R;
+import com.snailpong.schedulemaster.RingTonePlayingReceiver;
 import com.snailpong.schedulemaster.model.DeadModel;
 import com.snailpong.schedulemaster.model.NoclassModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.ALARM_SERVICE;
 
 public class TableClickedDialog extends DialogFragment {
 
@@ -43,6 +49,8 @@ public class TableClickedDialog extends DialogFragment {
     private int id;
     private DBHelper helper;
     private SQLiteDatabase db;
+    private PendingIntent pendingintent;
+    private AlarmManager alarm_manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,15 +119,56 @@ public class TableClickedDialog extends DialogFragment {
                 builder.setPositiveButton("예",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                Cursor cursor;
+                                /*
                                 DBHelper helper;
                                 SQLiteDatabase db;
-
                                 helper = new DBHelper(getActivity(), "db.db", null, 1);
                                 db = helper.getWritableDatabase();
                                 helper.onCreate(db);
+                                */
+                                // 정기 일정의 db 제거
                                 db.delete("weekly", "_id="+String.valueOf(id), null);
+
+                                // deadline의 db제거 및 알람 제거
+                                cursor = db.rawQuery("SELECT * FROM deadline WHERE whatid='" + id + "';", null);
+                                cursor.moveToFirst();
+                                while(cursor.moveToNext()) {
+                                    final Intent my_intent = new Intent(getActivity(), NotificationReceiver.class);
+                                    alarm_manager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+                                    pendingintent = PendingIntent.getBroadcast(getActivity()
+                                            , 1000 + cursor.getColumnIndex("_id"), my_intent, 0);
+                                    alarm_manager.cancel(pendingintent);
+                                }
                                 db.delete("deadline", "whatid="+String.valueOf(id), null);
+
+                                // noclass의 db제거 및 알람 제거
+                                cursor = db.rawQuery("SELECT * FROM noclass WHERE whatid='" + id + "';", null);
+                                cursor.moveToFirst();
+                                while(cursor.moveToNext()) {
+                                    final Intent my_intent = new Intent(getActivity(), NotificationReceiver.class);
+                                    alarm_manager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+                                    pendingintent = PendingIntent.getBroadcast(getActivity()
+                                            , 2000 + cursor.getColumnIndex("_id"), my_intent, 0);
+                                    alarm_manager.cancel(pendingintent);
+                                }
                                 db.delete("noclass", "whatid="+String.valueOf(id), null);
+
+                                // alarmset의 정기일정 진동모드 변경 알람 제거
+                                cursor = db.rawQuery("SELECT * FROM alarmset WHERE whatid='" + id + "';", null);
+                                cursor.moveToFirst();
+                                while(cursor.moveToNext()) {
+                                    if (cursor.getString(cursor.getColumnIndex("state")) == "vib on"
+                                    || cursor.getString(cursor.getColumnIndex("state")) == "vib off") {
+                                        final Intent my_intent = new Intent(getActivity(), RingTonePlayingReceiver.class);
+                                        alarm_manager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+                                        pendingintent = PendingIntent.getBroadcast(getActivity()
+                                                , cursor.getColumnIndex("_id"), my_intent, 0);
+                                        alarm_manager.cancel(pendingintent);
+                                    }
+                                }
+                                db.delete("alarmset", "whatid="+String.valueOf(id), null);
+                                db.close();
                                 Intent intent = new Intent(getActivity(), LoadingActivity.class);
                                 startActivity(intent);
                                 dismiss();

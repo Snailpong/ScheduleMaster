@@ -14,18 +14,21 @@ import java.util.Calendar;
 public class AlarmSetReceiver extends BroadcastReceiver {
     Context context;
 
+    private DBHelper helper;
+    private SQLiteDatabase db;
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        helper = new DBHelper(context, "db.db", null, 1);
+        db = helper.getWritableDatabase();
+        helper.onCreate(db);
+        db.execSQL("delete from " + "alarmset");
+        //int get_your_tag = intent.getExtras().getInt("tag");
         this.context = context;
         // Service 서비스 intent 생성
         Intent service_intent = new Intent(context, AlarmSetService.class);
-
-        // start the service
-        //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-        //    this.context.startForegroundService(service_intent);
-        //}else{
+        //service_intent.putExtra("tag", get_your_tag);
+        db.close();
         this.context.startService(service_intent);
-        //}
     }
 }

@@ -1,6 +1,8 @@
 package com.snailpong.schedulemaster;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -33,6 +35,8 @@ public class EditNoclassActivity extends AppCompatActivity {
     private TextView time;
     private TextView subject;
     private Calendar calendar = Calendar.getInstance();
+    private PendingIntent pendingintent;
+    private AlarmManager alarm_manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class EditNoclassActivity extends AppCompatActivity {
                 values.put("month", month);
                 values.put("day", day);
                 db.update("noclass", values, "_id="+String.valueOf(id),null);
+                final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
+                startService(service_intent);
                 finish();
             }
         });
@@ -95,6 +101,16 @@ public class EditNoclassActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // noclass의 db제거 및 알람 제거
+                Cursor cursor = db.rawQuery("SELECT * FROM noclass WHERE whatid='" + id + "';", null);
+                cursor.moveToFirst();
+                while(cursor.moveToNext()) {
+                    final Intent my_intent = new Intent(EditNoclassActivity.this, NotificationReceiver.class);
+                    alarm_manager = (AlarmManager) EditNoclassActivity.this.getSystemService(ALARM_SERVICE);
+                    pendingintent = PendingIntent.getBroadcast(EditNoclassActivity.this
+                            , 2000 + cursor.getColumnIndex("_id"), my_intent, 0);
+                    alarm_manager.cancel(pendingintent);
+                }
                 db.delete("noclass","_id="+String.valueOf(id),null);
             }
         });

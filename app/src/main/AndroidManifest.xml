@@ -27,9 +27,27 @@
         <activity android:name=".LoadingActivity" />
         <activity android:name=".CalendarRegularModifyActivity" />
         <activity android:name=".AddDeadlineActivity" />
-        <receiver android:name=".AlarmSetReceiver" />
-        <receiver android:name=".NotificationReceiver" />
-        <receiver android:name=".RingTonePlayingReceiver" />
+        <receiver android:name=".AlarmSetReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.kd">
+                </action>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".NotificationReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.kd">
+                </action>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".RingTonePlayingReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.kd">
+                </action>
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
