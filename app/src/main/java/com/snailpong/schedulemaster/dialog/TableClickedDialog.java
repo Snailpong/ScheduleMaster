@@ -44,7 +44,7 @@ import java.util.List;
 import static android.content.Context.ALARM_SERVICE;
 
 public class TableClickedDialog extends DialogFragment {
-
+    // AddDeadlineActivity or CancelAddDialog or MemoActivity 로의 이동
     private Fragment fragment;
     private int id;
     private DBHelper helper;

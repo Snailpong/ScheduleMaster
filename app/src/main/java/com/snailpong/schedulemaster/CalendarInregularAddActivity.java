@@ -143,8 +143,10 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
                     values.put("y", y);
                     values.put("x", x);
                     db.insert("daily", null, values);
-                    final Intent service_intent = new Intent(getApplicationContext(), AlarmSetService.class); // 이동할 컴포넌트
-                    startService(service_intent);
+                    if (chkVib.isChecked()) {
+                        final Intent service_intent = new Intent(getApplicationContext(), AlarmSetService.class); // 이동할 컴포넌트
+                        startService(service_intent);
+                    }
                     finish();
 
                 } else {

@@ -13,12 +13,14 @@ public class RingTonePlayingReceiver extends BroadcastReceiver {
 
         this.context = context;
         // intent로부터 전달받은 string
-        String get_your_state = intent.getExtras().getString("state");
+        String get_your_vib_state = intent.getExtras().getString("vib_state");
+        //String get_your_state = intent.getExtras().getString("state");
         // AlarmService intent 생성
         Intent service_intent = new Intent(context, RingTonePlayingService.class);
 
         // Service로 extra string값 보내기
-        service_intent.putExtra("state", get_your_state);
+        service_intent.putExtra("vib_state", get_your_vib_state);
+        //service_intent.putExtra("state", get_your_state);
 
         // start the alarm service
         this.context.startService(service_intent);

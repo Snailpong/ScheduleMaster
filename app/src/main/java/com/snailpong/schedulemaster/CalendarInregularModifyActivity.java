@@ -173,8 +173,10 @@ public class CalendarInregularModifyActivity extends AppCompatActivity {
                     values.put("y",y);
                     values.put("x",x);
                     db.update("daily",values,"_id="+String.valueOf(id),null);
-                    final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
-                    startService(service_intent);
+                    if (chkVib.isChecked()) {
+                        final Intent service_intent = new Intent(getApplicationContext(), AlarmSetService.class); // 이동할 컴포넌트
+                        startService(service_intent);
+                    }
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(CalendarInregularModifyActivity.this);

@@ -22,7 +22,7 @@ import java.util.Calendar;
 
 public class NotificationService extends Service {
 
-    public static final int NOTIFICATION_ID = 1;
+    //public static final int NOTIFICATION_ID = 1;
     DBHelper helper;
     SQLiteDatabase db;
 
@@ -73,20 +73,20 @@ public class NotificationService extends Service {
 
             // 서비스 시작
             startForeground(1, notification);
-
-            final Intent service_ntent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
-            startService(intent);
-
+            final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
+            startService(service_intent);
+            stopSelf();
         }
-        /*
+
         ContentValues values = new ContentValues();
-        if (getTitle== "마감 알림") {
+        if (getTitle == "마감 알림") {
             values.put("state", "deadline");
         }
 
-        else if (getTitle== "마감 알림") {
+        else if (getTitle == "휴일 알림") {
             values.put("state", "noclass");
         }
+        /*
         values.put("whatid", get_your_whatid);
         values.put("year", get_your_year);
         values.put("month", get_your_month);

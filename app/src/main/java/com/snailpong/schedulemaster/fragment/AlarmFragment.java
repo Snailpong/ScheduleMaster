@@ -55,6 +55,7 @@ public class AlarmFragment extends Fragment {
         list = new ArrayList<AlarmClass>();
         // 알람 관련 처리
         Cursor c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
+        c.moveToFirst();
         while(c.moveToNext()) {
             String state = c.getString(c.getColumnIndex("state"));
             whatid = c.getInt(c.getColumnIndex("whatid"));
@@ -65,7 +66,7 @@ public class AlarmFragment extends Fragment {
             Cursor cursor = db.query("weekly", null
                     , "_id="+String.valueOf(whatid), null,
                     null, null, null, null);
-            c.moveToFirst();
+            cursor.moveToFirst();
             // 과목명
             subject_name = c.getString(c.getColumnIndex("name"));
             timeString = String.format("%02d:%02d", hour, min);

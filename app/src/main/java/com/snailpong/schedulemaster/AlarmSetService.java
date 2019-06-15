@@ -39,14 +39,6 @@ public class AlarmSetService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*
-            tag = 0: 0시 setting
-            tag = 1: regular add, update
-            tag = 2: inregular add, update
-            tag = 3: deadline add, update
-            tag = 4: noclass add, update
-        */
-        //int get_your_tag = intent.getExtras().getInt("tag");
 
         helper = new DBHelper(this, "db.db", null, 1);
         db = helper.getWritableDatabase();
@@ -65,7 +57,7 @@ public class AlarmSetService extends Service {
 
         // AlarmReceiver intent 설정
         final Intent dialog_intent = new Intent(this, RingTonePlayingReceiver.class);
-        final Intent notification_intent = new Intent(this, NotificationReceiver.class);
+        //final Intent notification_intent = new Intent(this, NotificationReceiver.class);
 
         insertRegular();
         insertInregular();
@@ -83,7 +75,7 @@ public class AlarmSetService extends Service {
 
             calendar.set(year, month, day, hour, min, 0);
             //Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
-            dialog_intent.putExtra("state", state);
+            dialog_intent.putExtra("vib_state", state);
             pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
                     dialog_intent, PendingIntent.FLAG_ONE_SHOT);
             alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
