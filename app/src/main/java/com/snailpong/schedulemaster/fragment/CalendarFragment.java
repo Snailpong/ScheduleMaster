@@ -143,6 +143,8 @@ public class CalendarFragment extends Fragment {
             initLong();
         }
 
+        db.close();
+
 /*
         helper.addRegular(db, "신호및시스템".toString(), 5, "10:30", "11:45", false, false, 0, 0);
         helper.addRegular(db, "운영체제".toString(), 5, "13:30", "14:45", false, false, 0, 0);
