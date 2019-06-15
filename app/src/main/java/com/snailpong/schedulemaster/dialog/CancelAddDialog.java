@@ -64,7 +64,7 @@ public class CancelAddDialog extends DialogFragment implements DatePickerDialog.
         Cursor c = db.query("weekly", null
                 , "_id="+String.valueOf(getArguments().getInt("id")), null,
                 null, null, null, null);
-        c.moveToFirst();
+        //c.moveToFirst();
 
         // 과목명
         subject_name = c.getString(c.getColumnIndex("name"));
@@ -73,23 +73,25 @@ public class CancelAddDialog extends DialogFragment implements DatePickerDialog.
         c = db.query("noclass", null
                 , "whatid=" + getArguments().getInt("id"), null,
                 null, null, null, null);
-        c.moveToFirst();
+        //c.moveToFirst();
         // 알람 세팅
         final Intent my_intent = new Intent(getActivity(), NotificationReceiver.class);
 
         alarm_manager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
         calendar.set(year, month, day, 0, 0, 0);
-        // 0시에 한번 notification 설정
-        pendingintent = PendingIntent.getBroadcast(getActivity(), 2000 + c.getInt(c.getColumnIndex("_id")),
-                my_intent, 0);
-        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                pendingintent);
+
         alarmDate = String.format("%d%02d%d", year, month + 1, day);
         text = (month + 1) + "월 " + day + "일 "  + " " + subject_name + " " + " 휴강입니다.";
 
         // receiver에 string 값 넘겨주기
         my_intent.putExtra("title", "휴강 알림");
         my_intent.putExtra("text", text);
+
+        // 0시에 한번 notification 설정
+        pendingintent = PendingIntent.getBroadcast(getActivity(), 2000 + c.getInt(c.getColumnIndex("_id")),
+                my_intent, 0);
+        alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                pendingintent);
         /*
         my_intent.putExtra("year", year);
         my_intent.putExtra("month", month);

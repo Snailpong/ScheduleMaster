@@ -187,6 +187,7 @@ public class AddDeadlineActivity extends AppCompatActivity {
                 Cursor c = db.query("deadline", null
                         , "whatid=" + currentid, null,
                         null, null, null, null);
+                c.moveToFirst();
                 // 알람 세팅, _id를 이용한 pendingIntent 식별
                 pendingIntent = PendingIntent.getBroadcast(AddDeadlineActivity.this, 1000 + c.getInt(c.getColumnIndex("_id")),
                         my_intent, 0);

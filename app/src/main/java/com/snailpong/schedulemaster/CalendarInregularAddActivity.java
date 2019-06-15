@@ -138,12 +138,12 @@ public class CalendarInregularAddActivity extends AppCompatActivity {
                     values.put("day", days);
                     values.put("starttime", starttxt.getText().toString());
                     values.put("endtime", endtxt.getText().toString());
-                    values.put("vib", chkVib.isChecked()?1:0);
-                    values.put("gps", chkGPS.isChecked()?1:0);
-                    values.put("y",y);
-                    values.put("x",x);
+                    values.put("vib", chkVib.isChecked() ? 1 : 0);
+                    values.put("gps", chkGPS.isChecked() ? 1 : 0);
+                    values.put("y", y);
+                    values.put("x", x);
                     db.insert("daily", null, values);
-                    final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
+                    final Intent service_intent = new Intent(getApplicationContext(), AlarmSetService.class); // 이동할 컴포넌트
                     startService(service_intent);
                     finish();
 
