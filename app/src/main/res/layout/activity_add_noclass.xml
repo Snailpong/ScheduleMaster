@@ -108,55 +108,30 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center|bottom"
-            android:layout_alignParentBottom="true"
-            android:background="#eee"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:id="@+id/noclass_add"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="추가"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/noclass_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="취소"/>
-            </LinearLayout>
-        </LinearLayout>
+        android:layout_height="50dp"
+        android:gravity="right"
+        android:orientation="horizontal">
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/noclass_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/PrimaryFlatButton"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="추가"/>
+
+        <Button
+            android:id="@+id/noclass_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="취소"
+            android:theme="@style/PrimaryFlatButton"
+            />
+
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,8 +29,8 @@ public class AddDeadlineActivity extends AppCompatActivity {
     private int year, month, day, hour, min;
     private LinearLayout timelayout;
     private LinearLayout alarmlayout;
-    private LinearLayout addBtn;
-    private LinearLayout cancelBtn;
+    private Button addBtn;
+    private Button cancelBtn;
     private TextView subject;
     private TextView time;
     private TextView alarm;
@@ -62,8 +63,8 @@ public class AddDeadlineActivity extends AppCompatActivity {
         time = (TextView) findViewById(R.id.deadline_time);
         alarm = (TextView) findViewById(R.id.deadline_alarm);
         title = (EditText) findViewById(R.id.deadline_title);
-        addBtn = (LinearLayout) findViewById(R.id.deadline_add);
-        cancelBtn = (LinearLayout) findViewById(R.id.deadline_cancel);
+        addBtn = (Button) findViewById(R.id.deadline_add);
+        cancelBtn = (Button) findViewById(R.id.deadline_cancel);
         subject = (TextView) findViewById(R.id.deadline_subject);
         currentid = getIntent().getIntExtra("id", 0);
 
