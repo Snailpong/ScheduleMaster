@@ -146,7 +146,7 @@ public class SignupActivity extends AppCompatActivity {
                                             (FirebaseAuthUserCollisionException)task.getException();
                                     if (exception.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
                                         hideProgress();
-                                        Toast.makeText(getApplicationContext(), "이미 가입되어 있습니다. 가입된 계정으로 로그인해 주세요.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "이미 가입된 이메일 계정입니다.\n다른 이메일 계정을 사용해 주세요.", Toast.LENGTH_SHORT).show();
                                         email.setBackgroundColor(Color.rgb(255, 204, 204));
                                         name.setBackgroundColor(Color.TRANSPARENT);
                                         password.setBackgroundColor(Color.TRANSPARENT);

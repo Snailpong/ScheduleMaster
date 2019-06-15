@@ -43,26 +43,9 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
-        final TextView goo = view.findViewById(R.id.setting_goo);
+        final TextView login = view.findViewById(R.id.setting_login);
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            goo.setText("로그아웃");
-        }
-        // 테스트 버튼
-        LinearLayout testTableClickedBtn = (LinearLayout) view.findViewById(R.id.setting_alarmsound);
-        testTableClickedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Bundle args = new Bundle();
-//                args.putString("key", "value");
-//                TableClickedDialog dialog = new TableClickedDialog();
-//                dialog.setArguments(args); // 데이터 전달
-//                dialog.show(getActivity().getSupportFragmentManager(),"tag");
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
-        // 구글 계정 연동 로그인 버튼
+
         LinearLayout loginBtn = (LinearLayout) view.findViewById(R.id.setting_google);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +53,7 @@ public class SettingFragment extends Fragment {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     FirebaseAuth.getInstance().signOut();
-                    goo.setText("계정 연동");
+                    login.setText("로그인");
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
@@ -78,7 +61,6 @@ public class SettingFragment extends Fragment {
 
             }
         });
-        // Inflate the layout for this fragment
 
         LinearLayout sync = (LinearLayout) view.findViewById(R.id.setting_sync);
         sync.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +76,7 @@ public class SettingFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    goo.setText("로그아웃");
+                    login.setText("로그아웃");
                 }
             }
         };

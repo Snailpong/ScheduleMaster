@@ -107,7 +107,7 @@ public class AddFriendFragment extends Fragment {
                 found.setVisibility(View.VISIBLE);
             } else {
                 found.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "없어.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "해당 아이디 계정은 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
             }
         }
 
