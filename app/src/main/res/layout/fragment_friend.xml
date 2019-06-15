@@ -28,6 +28,19 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/friendfragment_nofriend"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="17sp"
+                android:textColor="#000"
+                android:text="새로운 친구를 추가해 보세요!"/>
+        </LinearLayout>
         <android.support.v7.widget.RecyclerView
            android:id="@+id/friendfragment_recyclerview"
            android:layout_width="match_parent"

@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.eunsiljo.timetablelib.data.TimeData;
@@ -38,9 +41,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.snailpong.schedulemaster.EditDeadlineActivity.getDateDay;
+
 public class CalendarFragment extends Fragment {
 
     private TimeTableView timeTable;
+    private LinearLayout datelayout;
+    private ImageView prev, next;
+    private TextView dateT;
 
     private ArrayList<TimeTableData> mShortSamples = new ArrayList<>();
     private ArrayList<TimeTableData> mLongSamples = new ArrayList<>();
@@ -66,6 +74,11 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         timeTable = (TimeTableView) view.findViewById(R.id.timeTable);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        datelayout = (LinearLayout) view.findViewById(R.id.calendar_datelayout);
+        datelayout.setVisibility(view.GONE);
+        dateT = (TextView) view.findViewById(R.id.calendar_day);
+        prev = (ImageView) view.findViewById(R.id.calender_prev);
+        next = (ImageView) view.findViewById(R.id.calendar_next);
 
         Button addBtn = (Button) view.findViewById(R.id.calender_button);
 
@@ -108,6 +121,22 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNow -= 86400000L;
+                initLong();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNow += 86400000L;
+                initLong();
+            }
+        });
+
         return view;
     }
 
@@ -143,6 +172,8 @@ public class CalendarFragment extends Fragment {
             initLong();
         }
 
+        db.close();
+
 /*
         helper.addRegular(db, "신호및시스템".toString(), 5, "10:30", "11:45", false, false, 0, 0);
         helper.addRegular(db, "운영체제".toString(), 5, "13:30", "14:45", false, false, 0, 0);
@@ -158,6 +189,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void initShort() {
+        datelayout.setVisibility(View.GONE);
         mShortSamples = new ArrayList<>();
         Cursor c = db.query("weekly", null, null, null, null, null, null);
 
@@ -200,6 +232,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void initLong() {
+        datelayout.setVisibility(View.VISIBLE);
         mLongSamples = new ArrayList<>();
         ArrayList<TimeData> values = new ArrayList<>();
 
@@ -210,15 +243,19 @@ public class CalendarFragment extends Fragment {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         int ayear = cal.get(Calendar.YEAR);
         int amonth = cal.get(Calendar.MONTH);
         int aday = cal.get(Calendar.DAY_OF_MONTH);
         String days = String.valueOf(ayear)+"-"+String.format("%02d",amonth+1)+"-"+String.format("%02d",aday);
+        String dayofWeek  = getDateDay(days, "yyyy-MM-dd");
+        dateT.setText(String.format("%d년 %d월 %d일 (", ayear, amonth+1, aday)+dayofWeek+")");
 
         int dayNum = cal.get(Calendar.DAY_OF_WEEK);
         dayNum = (dayNum == 1)?6:dayNum-2;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 
         //values.add(new TimeData(30, "dfef", R.color.color_table_1_light, getMillis("2019-05-28 00:00:00"), getMillis("2019-05-28 10:00:00")));
         Cursor c = db.query("weekly", null, null, null, null, null, null);

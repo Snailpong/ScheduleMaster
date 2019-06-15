@@ -33,6 +33,7 @@ import java.util.Map;
 
 public class FriendFragment extends Fragment {
     private FloatingActionButton addFriendBtn;
+    private LinearLayout noFriendMessage;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class FriendFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new FriendFragmentRecyclerViewAdapter());
         addFriendBtn = (FloatingActionButton) view.findViewById(R.id.friendfragment_addfriend);
+        noFriendMessage = (LinearLayout) view.findViewById(R.id.friendfragment_nofriend);
         addFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,65 +53,48 @@ public class FriendFragment extends Fragment {
         return view;
     }
     class FriendFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-                                    List<UserModel> users = new ArrayList<>();;
-                                    List<UserModel> friends = new ArrayList<>();;
-                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        List<UserModel> users = new ArrayList<>();
+        List<UserModel> friends = new ArrayList<>();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                    public FriendFragmentRecyclerViewAdapter() {
+        public FriendFragmentRecyclerViewAdapter() {
 
-                                        FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/friends").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                users.clear();
-                                                friends.clear();
-                                                final Map<String, Boolean> userFriends = (HashMap<String, Boolean>) dataSnapshot.getValue();
+            FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/friends").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    users.clear();
+                    friends.clear();
+                    final Map<String, Boolean> userFriends = (HashMap<String, Boolean>) dataSnapshot.getValue();
 
-                                                if (userFriends != null) {
-                                                    FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                                                                users.add(snapshot.getValue(UserModel.class));
+                    if (userFriends != null) {
+                        noFriendMessage.setVisibility(View.INVISIBLE);
+                        FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                    users.add(snapshot.getValue(UserModel.class));
 
-                                                            for (UserModel userModel : users)
-                                                                if (userFriends.containsKey(userModel.uid))
-                                                                    friends.add(userModel);
-                                                            notifyDataSetChanged();
-                                                        }
+                                for (UserModel userModel : users)
+                                    if (userFriends.containsKey(userModel.uid))
+                                        friends.add(userModel);
+                                notifyDataSetChanged();
+                            }
 
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
                         });
+                    } else {
+                        noFriendMessage.setVisibility(View.VISIBLE);
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
-            // 모든 유저 출력 코드
-//            FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
-//
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    // 서버에서 넘어온 데이터 처리
-//                    users.clear();int i = 0;
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        System.out.println("스냅샷 " + i++);
-//                        users.add(snapshot.getValue(UserModel.class));
-//                    }
-//
-//                    notifyDataSetChanged();
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
+
         }
 
         @NonNull

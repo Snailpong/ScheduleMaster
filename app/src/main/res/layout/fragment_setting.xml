@@ -59,13 +59,13 @@
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical">
                 <TextView
-                    android:id="@+id/setting_goo"
+                    android:id="@+id/setting_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:textSize="17sp"
                     android:textColor="#000"
-                    android:text="계정 연동"/>
+                    android:text="로그인"/>
             </LinearLayout>
 
             <LinearLayout
@@ -114,40 +114,8 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="앱 설정"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/setting_alarmsound"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="17sp"
-                    android:textColor="#000"
-                    android:text="알림 설정"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
                     android:text="어플리케이션 정보"/>
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/setting_version"
                 android:layout_width="match_parent"

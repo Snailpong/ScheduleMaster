@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,9 +27,9 @@ public class EditNoclassActivity extends AppCompatActivity {
     private String date;
     private StringBuilder stringBuilder;
     private LinearLayout timelayout;
-    private LinearLayout addBtn;
-    private LinearLayout cancelBtn;
-    private LinearLayout deleteBtn;
+    private Button addBtn;
+    private Button cancelBtn;
+    private Button deleteBtn;
     private DBHelper helper;
     private SQLiteDatabase db;
     private int id;
@@ -47,9 +48,9 @@ public class EditNoclassActivity extends AppCompatActivity {
         time = (TextView) findViewById(R.id.noclass_ed_time);
         subject = (TextView) findViewById(R.id.noclass_ed_subject);
         timelayout = (LinearLayout) findViewById(R.id.noclass_ed_timelayout);
-        addBtn = (LinearLayout) findViewById(R.id.noclass_ed_edit);
-        cancelBtn = (LinearLayout) findViewById(R.id.noclass_ed_cancel);
-        deleteBtn = (LinearLayout) findViewById(R.id.noclass_ed_delete);
+        addBtn = (Button) findViewById(R.id.noclass_ed_edit);
+        cancelBtn = (Button) findViewById(R.id.noclass_ed_cancel);
+        deleteBtn = (Button) findViewById(R.id.noclass_ed_delete);
 
         helper = new DBHelper(this, "db.db", null, 1);
         db = helper.getWritableDatabase();
