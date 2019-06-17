@@ -62,7 +62,7 @@ public class NotificationService extends Service {
                     // 알람 중요도 설정 (HIGH, DEFULAT ...)
                     NotificationManager.IMPORTANCE_HIGH);
 
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+            NotificationManager nm = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             // 알림 빌더 생성
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     // 알림 속성 설정
@@ -71,8 +71,18 @@ public class NotificationService extends Service {
                     .setSmallIcon(R.mipmap.ic_launcher) // 아이콘 수정 필요
                     .build();
 
+            nm.notify(1,notification);
+
+            ContentValues values = new ContentValues();
+            values.put("category",1);
+            values.put("title",getTitle);
+            values.put("content",getText);
+            values.put("time", Calendar.getInstance().getTimeInMillis());
+
+
+            db.insert("alarm", null, values);
+
             // 서비스 시작
-            startForeground(1, notification);
             final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
             startService(service_intent);
             stopSelf();

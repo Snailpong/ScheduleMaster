@@ -28,7 +28,6 @@ public class AlarmFragment extends Fragment {
     private String timeString;
     private String content;
     private Calendar calendar = Calendar.getInstance();
-    private int category;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -54,49 +53,13 @@ public class AlarmFragment extends Fragment {
         /* state text, name text, whatid integer, hour integer, min integer, timebefore text */
         list = new ArrayList<AlarmClass>();
         // 알람 관련 처리
-        Cursor c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
-        c.moveToFirst();
+        Cursor c = db.rawQuery("SELECT * FROM alarm", null);
         while(c.moveToNext()) {
-            String state = c.getString(c.getColumnIndex("state"));
-            whatid = c.getInt(c.getColumnIndex("whatid"));
-            hour = c.getInt(c.getColumnIndex("hour"));
-            min = c.getInt(c.getColumnIndex("min"));
-
-            // id를 사용해 과목명 불러오기
-            Cursor cursor = db.query("weekly", null
-                    , "_id="+String.valueOf(whatid), null,
-                    null, null, null, null);
-            cursor.moveToFirst();
-            // 과목명
-            subject_name = c.getString(c.getColumnIndex("name"));
-            timeString = String.format("%02d:%02d", hour, min);
-            // 마감처리
-            if (state == "deadline") {
-                category = 1;
-                // 알람 날짜와 마감 날짜가 다를 수도 있으므로
-                year = c.getInt(c.getColumnIndex("year"));
-                month = c.getInt(c.getColumnIndex("month"));
-                day = c.getInt(c.getColumnIndex("day"));
-                prev = c.getInt(c.getColumnIndex("prev"));
-
-                calendar.set(year, month, day, hour, min, 0);
-                calendar.add(calendar.HOUR_OF_DAY, -prev);
-                timebefore = calendar.getTimeInMillis();
-
-                content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
-                        + " " + subject_name + " " + c.getInt(c.getColumnIndex("name"))
-                        + " " + "마감입니다.";
-            }
-            // 휴강처리
-            else {
-                category = 2;
-                calendar.set(year, month, day, 0, 0);
-                timebefore = calendar.getTimeInMillis();
-                content = year + "년 " + (month + 1) + "월 " + day + "일 " + timeString
-                        + " " + subject_name + " " + " 휴강입니다.";
-            }
-
-            list.add(new AlarmClass(whatid, category, category_name[category], content, timebefore));
+            int category = c.getInt(c.getColumnIndex("category"));
+            String title = c.getString(c.getColumnIndex("title"));
+            String content = c.getString(c.getColumnIndex("content"));
+            long time = c.getLong(c.getColumnIndex("time"));
+            list.add(new AlarmClass(c.getInt(c.getColumnIndex("_id")), category, title, content, time));
         }
 
         AlarmAdapter adapter = new AlarmAdapter(list) ;

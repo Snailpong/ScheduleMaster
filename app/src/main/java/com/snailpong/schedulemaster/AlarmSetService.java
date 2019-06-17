@@ -66,40 +66,29 @@ public class AlarmSetService extends Service {
 
         // 일정을 알람매니저에 넣기
         c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "vib on" + "' OR state='" + "vib off" + "';", null);
-        c.moveToFirst();
         while (c.moveToNext()) {
             String state = c.getString(c.getColumnIndex("state"));
 
             hour = c.getInt(c.getColumnIndex("hour"));
             min = c.getInt(c.getColumnIndex("min"));
 
-            calendar.set(year, month, day, hour, min, 0);
-            //Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
-            dialog_intent.putExtra("vib_state", state);
-            pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
-                    dialog_intent, PendingIntent.FLAG_ONE_SHOT);
-            alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    pendingIntent);
-        }
-        /*
-        // 마강, 휴일을 알람매니저에 넣기
-        c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "deadline" + "' OR state='" + "noclass" + "';", null);
-        c.moveToFirst();
-        while (c.moveToNext()) {
-            String state = c.getString(c.getColumnIndex("state"));
+            Calendar cal = Calendar.getInstance();
+            int mhour = cal.get(Calendar.HOUR_OF_DAY);
+            int mmin = cal.get(Calendar.MINUTE);
 
-            hour = c.getInt(c.getColumnIndex("hour"));
-            min = c.getInt(c.getColumnIndex("min"));
+            if(hour*60+min >= mhour*60+mmin) {
+                calendar.set(year, month, day, hour, min, 0);
+                Log.d("Alarmsetservice", String.format("%d %d %d %d %d %d%d", year, month, day, hour, min, mhour, mmin));
+                dialog_intent.putExtra("vib_state", state);
+                pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
+                        dialog_intent, PendingIntent.FLAG_ONE_SHOT);
+                alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        pendingIntent);
+            }
 
-            calendar.set(year, month, day, hour, min, 0);
-            //Log.d("Alarmsetservice", String.format("%d %d %d %d %d", year, month, day, hour, min));
-            notification_intent.putExtra("state", state);
-            pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
-                    notification_intent, PendingIntent.FLAG_ONE_SHOT);
-            alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    pendingIntent);
+
         }
-        */
+
         Log.d("Alarmsetservice", "on startcommand() 호출");
         return START_NOT_STICKY;
     }
@@ -110,7 +99,7 @@ public class AlarmSetService extends Service {
             int day = c.getInt(c.getColumnIndex("day")) & mask[dayOfWeek];
             if (day != 0) {
                 // DB에 넣기
-                //Log.d("Alarmsetservice", "정기일정 처리");
+                Log.d("Alarmsetservice", "정기일정 처리");
                 AddCalendarDB(c, "vib on", "starttime");
                 AddCalendarDB(c, "vib off", "endtime");
             }
@@ -173,7 +162,7 @@ public class AlarmSetService extends Service {
     private void AddCalendarDB (Cursor c, String state, String columnName) {
         ContentValues values = new ContentValues();
         String[] HourMin = (c.getString(c.getColumnIndex(columnName))).split(":");
-        //Log.d("state", state);
+        Log.d("state", c.getString(c.getColumnIndex("name")) + state);
         values.put("state", state);
         values.put("name", c.getString(c.getColumnIndex("name")));
         values.put("hour", Integer.valueOf(HourMin[0]));

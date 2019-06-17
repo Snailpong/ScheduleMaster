@@ -98,7 +98,6 @@ public class MypageDeadlineActivity extends AppCompatActivity {
                     intent.putExtra("id", thisModel.getId());
                     intent.putExtra("name", subname);
                     startActivity(intent);
-                    finish();
                 }
             });
         }

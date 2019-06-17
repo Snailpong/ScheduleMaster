@@ -47,10 +47,8 @@ public class RingTonePlayingService extends Service {
 
         final LocationListener gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                String provider = location.getProvider();
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
-                double altitude = location.getAltitude();
                 // x,y ; longitude, latitude
                 /*
                 txtResult.setText("위치정보 : " + provider + "\n" +

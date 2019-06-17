@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.Calendar;
 // 0시에 해야할 처리
@@ -28,6 +29,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         */
 
 
+        Log.d("Notifi", get_your_text + get_your_title);
         // 서비스 intent 생성
         Intent service_intent = new Intent(context, NotificationService.class);
 
@@ -44,10 +46,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         */
 
         // start the service
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-            this.context.startForegroundService(service_intent);
-        }else{
+
             this.context.startService(service_intent);
-        }
     }
 }

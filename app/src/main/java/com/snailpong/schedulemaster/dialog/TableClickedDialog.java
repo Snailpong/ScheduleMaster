@@ -77,6 +77,7 @@ public class TableClickedDialog extends DialogFragment {
                 Intent intent = new Intent(getActivity(), AddDeadlineActivity.class);
                 intent.putExtra("id", id);
                 startActivity(intent);
+                dismiss();
             }
         });
         // 휴일 추가 버튼 이벤트 처리
@@ -89,6 +90,7 @@ public class TableClickedDialog extends DialogFragment {
                 CancelAddDialog dialog = new CancelAddDialog();
                 dialog.setArguments(args);
                 dialog.show(getActivity().getSupportFragmentManager(),"tag");
+                dismiss();
             }
         });
         Button yes = (Button)view.findViewById(R.id.dia_clicked_yes);
