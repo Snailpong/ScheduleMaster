@@ -52,8 +52,8 @@ public class AlarmSetService extends Service {
 
         // 알람매니저 설정
         alarm_manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        db.delete("alarmset",  "state=?", new String[]{"vib on"});
-        db.delete("alarmset",  "state=?", new String[]{"vib off"});
+        db.delete("alarmset",  "state=?", new String[]{"daily"});
+        db.delete("alarmset",  "state=?", new String[]{"weekly"});
 
         // AlarmReceiver intent 설정
         final Intent dialog_intent = new Intent(this, RingTonePlayingReceiver.class);
@@ -64,10 +64,13 @@ public class AlarmSetService extends Service {
         insertNoclass();
         insertDeadline();
 
+
         // 일정을 알람매니저에 넣기
         c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "vib on" + "' OR state='" + "vib off" + "';", null);
         while (c.moveToNext()) {
+            String vib_state = c.getString(c.getColumnIndex("vib_state"));
             String state = c.getString(c.getColumnIndex("state"));
+            int whatid = c.getInt(c.getColumnIndex("whatid"));
 
             hour = c.getInt(c.getColumnIndex("hour"));
             min = c.getInt(c.getColumnIndex("min"));
@@ -79,7 +82,9 @@ public class AlarmSetService extends Service {
             if(hour*60+min >= mhour*60+mmin) {
                 calendar.set(year, month, day, hour, min, 0);
                 Log.d("Alarmsetservice", String.format("%d %d %d %d %d %d%d", year, month, day, hour, min, mhour, mmin));
-                dialog_intent.putExtra("vib_state", state);
+                dialog_intent.putExtra("vib_state", vib_state);
+                dialog_intent.putExtra("state", state);
+                dialog_intent.putExtra("whatid", whatid);
                 pendingIntent = PendingIntent.getBroadcast(this, c.getInt(c.getColumnIndex("_id")),
                         dialog_intent, PendingIntent.FLAG_ONE_SHOT);
                 alarm_manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
@@ -100,19 +105,19 @@ public class AlarmSetService extends Service {
             if (day != 0) {
                 // DB에 넣기
                 Log.d("Alarmsetservice", "정기일정 처리");
-                AddCalendarDB(c, "vib on", "starttime");
-                AddCalendarDB(c, "vib off", "endtime");
+                AddCalendarDB(c, "weekly", "vib on", "starttime");
+                AddCalendarDB(c, "weekly", "vib off", "endtime");
             }
         }
     }
 
     private void insertInregular() {
-        c = db.rawQuery("SELECT * FROM daily WHERE day='" + days + "';", null);
+        c = db.rawQuery("SELECT * FROM daily WHERE day='" + days + "' AND vib='" + 1 + "';", null);
         c.moveToFirst();
         while (c.moveToNext()) {
             // DB에 넣기
-            AddCalendarDB(c, "vib on", "starttime");
-            AddCalendarDB(c, "vib off", "endtime");
+            AddCalendarDB(c, "daily","vib on", "starttime");
+            AddCalendarDB(c, "daily","vib off", "endtime");
         }
     }
 
@@ -122,12 +127,15 @@ public class AlarmSetService extends Service {
         c.moveToFirst();
         while (c.moveToNext()) {
             // DB에 넣기
+            Cursor cursor;
+            int id = c.getInt(c.getColumnIndex("whatid"));
+
+            db.delete("alarmset", "state=?, whatid=?", new String[]{"weekly", String.valueOf(id)});
             ContentValues values = new ContentValues();
             values.put("state", "noclass");
-            values.put("whatid", c.getInt(c.getColumnIndex("whatid")));
+            values.put("whatid", id);
             values.put("hour", 0);
             values.put("min", 0);
-
             db.insert("alarmset", null, values);
         }
     }
@@ -159,11 +167,13 @@ public class AlarmSetService extends Service {
         }
     }
 
-    private void AddCalendarDB (Cursor c, String state, String columnName) {
+    private void AddCalendarDB (Cursor c, String state, String vib_state, String columnName) {
         ContentValues values = new ContentValues();
         String[] HourMin = (c.getString(c.getColumnIndex(columnName))).split(":");
-        Log.d("state", c.getString(c.getColumnIndex("name")) + state);
+        //Log.d("state", c.getString(c.getColumnIndex("name")) + state);
         values.put("state", state);
+        values.put("vib_state", vib_state);
+        values.put("whatid", c.getColumnIndex(("whatid")));
         values.put("name", c.getString(c.getColumnIndex("name")));
         values.put("hour", Integer.valueOf(HourMin[0]));
         values.put("min", Integer.valueOf(HourMin[1]));

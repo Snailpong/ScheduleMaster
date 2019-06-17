@@ -46,7 +46,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         */
 
         // start the service
-
-            this.context.startService(service_intent);
+        this.context.startService(service_intent);
     }
 }

@@ -85,7 +85,7 @@ public class NotificationService extends Service {
             // 서비스 시작
             final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
             startService(service_intent);
-            stopSelf();
+            //stopSelf();
         }
 
         ContentValues values = new ContentValues();
@@ -103,9 +103,9 @@ public class NotificationService extends Service {
         values.put("day", get_your_day);
         values.put("hour", get_your_hour);
         values.put("min", get_your_min);
-
-        db.insert("alarmset", null, values);
         */
+        db.insert("alarmset", null, values);
+
         return START_NOT_STICKY;
     }
 

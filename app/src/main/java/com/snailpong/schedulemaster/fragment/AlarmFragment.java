@@ -44,13 +44,13 @@ public class AlarmFragment extends Fragment {
         helper = new DBHelper(getActivity(), "db.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
-
+/*
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int whatid, hour, min, prev;
         long timebefore;
-        /* state text, name text, whatid integer, hour integer, min integer, timebefore text */
+*/
         list = new ArrayList<AlarmClass>();
         // 알람 관련 처리
         Cursor c = db.rawQuery("SELECT * FROM alarm", null);
