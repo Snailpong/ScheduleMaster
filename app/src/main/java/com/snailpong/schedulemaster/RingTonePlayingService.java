@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +20,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class RingTonePlayingService extends Service {
+    Cursor c;
+    DBHelper helper;
+    SQLiteDatabase db;
 
     @Nullable
     @Override
@@ -33,16 +38,17 @@ public class RingTonePlayingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Intent로부터 전달받은 string
-        String get_state = intent.getExtras().getString("state");
+        String get_vib_state = intent.getExtras().getString("vib_state");
+        //String get_state = intent.getExtras().getString("state");
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        // c = db.rawQuery("SELECT * FROM alarmset WHERE state='" + "vib on" + "' OR state='" + "vib off" + "';", null);
+
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         final LocationListener gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                String provider = location.getProvider();
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
-                double altitude = location.getAltitude();
                 // x,y ; longitude, latitude
                 /*
                 txtResult.setText("위치정보 : " + provider + "\n" +
@@ -63,8 +69,8 @@ public class RingTonePlayingService extends Service {
         };
 
         // 여기에 GPS 일치 여부에 따른 진동모드 변호나 설정(조건문 처리)
-        assert get_state != null;
-        switch (get_state) {
+        assert get_vib_state != null;
+        switch (get_vib_state) {
             case "vib on":
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);  // 진동모드
                 //Log.d("aaa", "진동");
@@ -76,8 +82,6 @@ public class RingTonePlayingService extends Service {
             default:
                 break;
         }
-
-
 
         return START_NOT_STICKY;
     }

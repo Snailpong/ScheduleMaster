@@ -126,8 +126,10 @@ public class CalendarRegularAddActivity extends AppCompatActivity {
 
                 if(day != 0 && starttxt.getText().toString() != endtxt.getText().toString() && name.getText().toString().length() > 1) {
                     helper.addRegular(db, name.getText().toString(), day, starttxt.getText().toString(), endtxt.getText().toString(), chkVib.isChecked(), chkGPS.isChecked(), y, x);
-                    final Intent service_intent = new Intent(getApplicationContext(),AlarmSetService.class); // 이동할 컴포넌트
-                    startService(service_intent);
+                    if (chkVib.isChecked()) {
+                        final Intent service_intent = new Intent(getApplicationContext(), AlarmSetService.class); // 이동할 컴포넌트
+                        startService(service_intent);
+                    }
                     finish();
 
                 } else {
